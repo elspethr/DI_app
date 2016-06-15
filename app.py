@@ -38,8 +38,11 @@ def runmypage():
 
 @app.route('/result', methods=['GET','POST'])
 def getresult():
-    disney = 'feature1' in request.form
-    cal_ad = 'feature2' in request.form
+    code = []
+    if 'feature1' in request.form:
+        code = "Disneyland"
+    if 'feature2' in request.form:
+        code = "California Adventure"
     #
     #try:
         #api_url = 'https://www.quandl.com/api/v3/datasets/WIKI/%s/data.json' %code
@@ -61,7 +64,7 @@ def getresult():
                        #dates, df["Open"], df["Adj. Open"], df["Close"], df["Adj. Close"])
     #script, div = components(bplt)
     #RENDER
-    return render_template('result.html')#, code=code, script=script, div=div) #send values you need in the result page
+    return render_template('result.html', code=code) #, script=script, div=div) #send values you need in the result page
    
 
 if __name__ == '__main__':
