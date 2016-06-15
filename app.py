@@ -38,11 +38,11 @@ def runmypage():
 
 @app.route('/result', methods=['GET','POST'])
 def getresult():
-    code = []
-    if 'feature1' in request.form:
-        code = "Disneyland"
-    if 'feature2' in request.form:
-        code = "California Adventure"
+    code = request.form['option']
+    #if 'feature1' in request.form:
+        #code = "Disneyland"
+    #if 'feature2' in request.form:
+        #code = "California Adventure"
     #
     #try:
         #api_url = 'https://www.quandl.com/api/v3/datasets/WIKI/%s/data.json' %code
@@ -68,5 +68,5 @@ def getresult():
    
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
-    #app.run()
+    #app.run(host='0.0.0.0', debug=True)
+    app.run()
