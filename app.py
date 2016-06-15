@@ -1,4 +1,4 @@
-import requests as req
+#import requests as req
 import numpy as np
 import pandas as pd
 from flask import Flask,render_template,request,redirect
@@ -58,7 +58,7 @@ def getresult():
     #SEND TO PLOT
     #dates = [datetime.strptime(x, '%Y-%m-%d') for x in df["Date"]] #convert x to dates
     #bplt = stock_chart(opening, adjopen, close, adjclose,
-                       dates, df["Open"], df["Adj. Open"], df["Close"], df["Adj. Close"])
+                       #dates, df["Open"], df["Adj. Open"], df["Close"], df["Adj. Close"])
     #script, div = components(bplt)
     #RENDER
     return render_template('result.html')#, code=code, script=script, div=div) #send values you need in the result page
