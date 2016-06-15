@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{stock}} data</title>
+      <style type="text/css">
+        body{color:black; font-size:14px; font-family:sans-serif; background:white; margin:30px}
+        h1{font-weight:bold}
+        h2{font-weight:bold; font-style:italic}
+        a{text-decoration: none}
+    </style>
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.11.1.min.css" type="text/css" />
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.11.1.min.js"></script>
+    {{ script | safe }}
+  </head>
+  <body>
+    <div class=page>
+      <h1>Generated graph for {{code}}<br></h1>
+      {{div|safe}}
+      <br>
+      <a href="/index">Back</a>
+  </div>
+
+  </body>
+</html>
