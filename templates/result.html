@@ -1,35 +1,49 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Park info</title>
-      <style type="text/css">
-        body{color:black; font-size:14px; font-family:sans-serif; background:white; margin:30px}
-        a{text-decoration: none}
-    </style>
-  </head>
-  <body>
-<div class=page>
+<head>
+<meta charset="utf-8">
 
-  <h3>Sorry, this page is under construction! Please come back soon.<br>
-  Visit this <a href="https://github.com/elspethr/DI_project">github repository</a> to check out the models in development.</h3>
+<style type="text/css">
+body{color:black; font-size:16px; font-family:"Helvetica Neue", Helvetica, sans-serif; background:#FFFFFF; margin:0px; text-align:center}
+body.center{margin-left=auto; margin-right=auto}
+div{text-align:left; background:#FFFFFF; margin:0 auto}
+div.padded{width:930px; padding-top:20px; padding-right:20px; padding-bottom:20px; padding-left:20px}
+div.paddedb{width:915px; height:300px; padding-top:0px; padding-right:10px; padding-bottom:20px; padding-left:5px; font-size:16px; text-align:justify}
+div.tabs{font-size:14px; font-style:bold; background:#583759; text-align:center}
+a{text-decoration: none}
+</style>
 
+<title>Park info</title>
+
+</head>
+
+<body>
+
+<div class=padded>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td width="925px" height="271" background="static/rollercoaster_small.jpg" valign="bottom" align="right">
+</td>
+</tr>
+</table>
   
-  <h2>Crowd level predictions for next 24 hours<br></h2>
-  {{div|safe}}
 
-  <b>Park:</b> {{code}}<br><br>
+<h3>This page is still under construction! More plots and predictions will be added soon.<br></h3>
+ 
+<h2>{{code}} crowd levels for next 36 hours<br></h2>
+{{div|safe}}
   
-  (plot goes here!) <br><br>
-  
-  <h2>Crowd level predictions for next 3 days<br></h2>
+(plot goes here!) <br><br>
 
-  <b>Park:</b> {{code}}<br><br>
 
-  (plot goes here!)<br><br>
-  
-  <a href="/index">Back</a>
-  </div>
+<h2>{{code}} crowd levels for next 5 days<br></h2>
 
-  </body>
+(plot goes here!)<br><br><br>
+
+Learn more about the <a href="/info">technical details</a> of this project.<br><br>
+
+<a href="/index"><b>Back to main page</b></a>
+
+</div>
+</body>
 </html>
