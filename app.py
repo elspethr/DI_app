@@ -56,8 +56,7 @@ def get_hourly_forecast(key, code):
         predsdict['hour2'] = predsdict['hour']**2 
         xaxis.append(line[2].get('civil'))   
         predsdict[line[3]] = 1.0
-        dates.append(datetime.strptime(line[2].get('pretty'), 
-                                       "%H:%M %p %Z on %B %d, %Y"))
+        dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
         if (dates[-1].weekday() >= 5 or dates[-1] in us_holidays):
             predsdict['we_ho'] = 1
         preds.append(predsdict)
@@ -116,14 +115,14 @@ def get_specs():
 def get_query():
     if request.method=='GET':
         code = request.args.get('option')
-        print request.form
+        #print request.form
         key = '85df9c6c899ae271'  #fix this later
 
         #GET CURRENT WEATHER DATA and PREDICT
         hourdat = get_hourly_forecast(key, code)
         estimates = np.ndarray.tolist(make_predictions(hourdat['predictors']))
         xaxis = hourdat['xaxis']
-        print estimates
+        #print estimates
         
         return json.dumps(estimates)
     
