@@ -99,11 +99,11 @@ def getresult():
     #estsend = json.dumps(estimates)
 
     #SET UP VARIABLES FOR HTML
-    temp = current['temp']
-    wind = current['wind']
+    #temp = current['temp']
+    #wind = current['wind']
     
     #RENDER
-    return render_template('result.html', code=code, temp=temp, wind=wind)
+    return render_template('result.html', code=code)#, temp=temp, wind=wind)
 
     
 @app.route('/info', methods=['GET','POST'])
@@ -131,5 +131,5 @@ def get_query():
     
 if __name__ == '__main__':
     #app.run(host='0.0.0.0', debug=True)
-    app.run()
+    app.run(debug=True)
 
