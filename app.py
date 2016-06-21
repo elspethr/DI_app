@@ -56,7 +56,10 @@ def get_hourly_forecast(key, code):
         predsdict['hour2'] = predsdict['hour']**2 
         xaxis.append(line[2].get('civil'))   
         predsdict[line[3]] = 1.0
-        dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
+
+        #print line[2]
+        dates.append(datetime(int(line[2]["year"]),int(line[2]["mon"]),int(line[2]["mday"]),int(line[2]["hour"]),int(line[2]["min"]),int(line[2]["sec"])))
+        #dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
         if (dates[-1].weekday() >= 5 or dates[-1] in us_holidays):
             predsdict['we_ho'] = 1
         preds.append(predsdict)
