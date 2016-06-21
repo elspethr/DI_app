@@ -7,6 +7,7 @@ import urllib2
 import json
 import dill
 import logging
+import sys
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
