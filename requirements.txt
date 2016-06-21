@@ -9,3 +9,4 @@ numpy==1.11.0
 holidays==0.4.1
 scipy
 sklearn
+pandas
