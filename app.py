@@ -1,12 +1,10 @@
 #import requests as req
 import numpy as np
-import pandas as pd
 from flask import Flask,render_template,request,redirect,jsonify
 from datetime import datetime
 import holidays
 import urllib2
 import json
-import matplotlib as plt
 import dill
 
 app = Flask(__name__)
@@ -90,21 +88,19 @@ def runmypage():
 @app.route('/result', methods=['GET','POST'])
 def getresult():
     code = request.form['option']
-    key = '85df9c6c899ae271'  #fix this later
+    #key = '85df9c6c899ae271'  #fix this later
 
     #GET CURRENT WEATHER DATA and PREDICT
-    hourdat = get_hourly_forecast(key, code)
-    estimates = np.ndarray.tolist(make_predictions(hourdat['predictors']))
-    estsend = json.dumps(estimates)
+    #hourdat = get_hourly_forecast(key, code)
+    #estimates = np.ndarray.tolist(make_predictions(hourdat['predictors']))
+    #estsend = json.dumps(estimates)
 
     #SET UP VARIABLES FOR HTML
-    xlabels = hourdat['dates']
-    current = hourdat['predictors'][1]
     temp = current['temp']
     wind = current['wind']
     
     #RENDER
-    return render_template('result.html', code=code, temp=temp, wind=wind, xlabels=xlabels, estimates=estsend)
+    return render_template('result.html', code=code, temp=temp, wind=wind)
 
     
 @app.route('/info', methods=['GET','POST'])
