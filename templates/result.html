@@ -1,17 +1,25 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
 <meta charset="utf-8">
 
 <style type="text/css">
 body{color:black; font-size:16px; font-family:"Helvetica Neue", Helvetica, sans-serif; background:#FFFFFF; margin:0px; text-align:center}
 body.center{margin-left=auto; margin-right=auto}
 div{text-align:left; background:#FFFFFF; margin:0 auto}
-div.padded{width:930px; padding-top:20px; padding-right:20px; padding-bottom:20px; padding-left:20px}
-div.paddedb{width:915px; height:300px; padding-top:0px; padding-right:10px; padding-bottom:20px; padding-left:5px; font-size:16px; text-align:justify}
-div.tabs{font-size:14px; font-style:bold; background:#583759; text-align:center}
+div.padded{width:930px; padding-top:20px; padding-right:20px;
+padding-bottom:20px; padding-left:20px; text-align:left}
+div.tabs{font-size:14px; font-style:bold; background:#583759;text-align:center}
 a{text-decoration: none}
+svg{margin-left:5; margin-right:auto; display:block;}
 </style>
+
+<link href="static/nv.d3.css" rel="stylesheet">
+<script src="static/d3.v3.js"></script>
+<script src="static/nv.d3.js"></script>
+<script src="static/jquery-3.0.0.min.js"></script>
 
 <title>Park info</title>
 
@@ -20,6 +28,7 @@ a{text-decoration: none}
 <body>
 
 <div class=padded>
+{{div|safe}}
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
 <td width="925px" height="271" background="static/rollercoaster_small.jpg" valign="bottom" align="right">
@@ -27,23 +36,64 @@ a{text-decoration: none}
 </tr>
 </table>
   
+<h2>{{code}} summary</h2>
 
-<h3>This page is still under construction! More plots and predictions will be added soon.<br></h3>
+Current weather conditions: {{temp}} &#8457;, wind {{wind}} miles per hour.
  
-<h2>{{code}} crowd levels for next 36 hours<br></h2>
-{{div|safe}}
-  
-(plot goes here!) <br><br>
+<h3>Crowd levels for next 36 hours<br></h3>
 
+<div id="chart2">
+<svg style="height:400px;width:875px"> </svg>
+</div>
+<script type="text/javascript">
 
-<h2>{{code}} crowd levels for next 5 days<br></h2>
+var chart;
+var chart_data;
 
-(plot goes here!)<br><br><br>
+nv.addGraph(function() {
+chart = nv.models.lineChart().margin({left: 100});
 
-Learn more about the <a href="/info">technical details</a> of this project.<br><br>
+  chart.xAxis     //Chart x-axis settings
+      .axisLabel('Time (hr)')
+      .tickFormat(d3.format(',r'));
+
+  chart.yAxis     //Chart y-axis settings
+      .axisLabel('Standardized crowd prediction')
+      .tickFormat(d3.format('.02f'));
+
+  chart_data=d3.select('#chart2 svg').datum([]);
+  chart_data.transition().duration(500).call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+//**************************************
+
+$.getJSON("/query?option={{code}}",function(result){
+data_vals=[];
+console.log(result);
+for(var i=0;i<result.length;i++)
+  data_vals.push({x:i,y:result[i]});
+
+data=[{"key":"Estimate","values":data_vals}];
+
+chart_data.datum(data).transition().duration(500).call(chart);
+
+});
+
+</script>
+
+<h3>Crowd levels for next 5 days</h3>
+
+This page is still under construction! More predictions will
+be added soon.<br><br>
+
+<b>Learn more about the <a href="/info">technical details</a> of this project.</b><br><br>
 
 <a href="/index"><b>Back to main page</b></a>
 
 </div>
+
 </body>
 </html>
