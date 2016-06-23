@@ -1,7 +1,7 @@
 #import requests as req
 import numpy as np
 from flask import Flask,render_template,request,redirect,jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 import holidays
 import urllib2
 import json
@@ -57,9 +57,11 @@ def get_hourly_forecast(key, code):
         predsdict[line[3]] = 1.0
 
         #print line[2]
-        dates.append(datetime(int(line[2]["year"]),int(line[2]["mon"]),int(line[2]["mday"]),int(line[2]["hour"]),int(line[2]["min"]),int(line[2]["sec"])))
+        #dates.append(datetime(int(line[2]["year"]),int(line[2]["mon"]),int(line[2]["mday"]),int(line[2]["hour"]),int(line[2]["min"]),int(line[2]["sec"])))
+        dates.append(int(line[2]['epoch']))
         #dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
-        if (dates[-1].weekday() >= 5 or dates[-1] in us_holidays):
+        date=datetime.utcfromtimestamp(int(line[2]['epoch']))
+        if(date.weekday() >= 5 or date in us_holidays):
             predsdict['we_ho'] = 1
         #if predsdict['hour'] >= 8 and predsdict['hour'] <= 22:
         preds.append(predsdict)
@@ -125,7 +127,7 @@ def get_query():
         hourdat = get_hourly_forecast(key, code)
         estimates = np.ndarray.tolist(numpy.asarray(make_predictions(hourdat['predictors'])))
         #xaxis = hourdat['xaxis']
-        sendtojs = [{"x":(hourdat["dates"][i]-datetime.fromtimestamp(0)).total_seconds(),"y":estimates[i]} for i in range(len(estimates))]
+        sendtojs = [{"x":hourdat["dates"][i],"y":estimates[i]} for i in range(len(estimates))]
         
         return json.dumps(sendtojs)
     
