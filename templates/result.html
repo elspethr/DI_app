@@ -54,8 +54,11 @@ nv.addGraph(function() {
 chart = nv.models.lineChart().margin({left: 100});
 
   chart.xAxis     //Chart x-axis settings
-      .axisLabel('Time (hr)')
-      .tickFormat(d3.format(',r'));
+.axisLabel('Time (PST)')
+.tickFormat(function(d) {
+return d3.time.format('%H:%M')(new Date(1000*d))
+          });
+//      .tickFormat(d3.format(',r'));
 
   chart.yAxis     //Chart y-axis settings
       .axisLabel('Standardized crowd prediction')
@@ -71,12 +74,9 @@ chart = nv.models.lineChart().margin({left: 100});
 //**************************************
 
 $.getJSON("/query?option={{code}}",function(result){
-data_vals=[];
-console.log(result);
-for(var i=0;i<result.length;i++)
-  data_vals.push({x:i,y:result[i]});
 
-data=[{"key":"Estimate","values":data_vals}];
+data=[{"key":"Estimate","values":result}];
+console.log(result)
 
 chart_data.datum(data).transition().duration(500).call(chart);
 

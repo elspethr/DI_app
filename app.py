@@ -8,6 +8,7 @@ import json
 import dill
 import logging
 import sys
+import numpy
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -27,7 +28,6 @@ def get_hourly_forecast(key, code):
     entries = [[x[column] for column in predvars] for x in parsed_json['hourly_forecast']]
     
     #cycle through and assign values for predictors
-    xaxis = []
     dates = []
     preds = []
     us_holidays = holidays.UnitedStates()
@@ -54,7 +54,6 @@ def get_hourly_forecast(key, code):
         predsdict['wind2'] = predsdict['wind']**2
         predsdict['hour'] = float(line[2].get('hour_padded'))
         predsdict['hour2'] = predsdict['hour']**2 
-        xaxis.append(line[2].get('civil'))   
         predsdict[line[3]] = 1.0
 
         #print line[2]
@@ -62,14 +61,15 @@ def get_hourly_forecast(key, code):
         #dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
         if (dates[-1].weekday() >= 5 or dates[-1] in us_holidays):
             predsdict['we_ho'] = 1
+        #if predsdict['hour'] >= 8 and predsdict['hour'] <= 22:
         preds.append(predsdict)
     
     #return variables needed later
-    return {'predictors':preds, 'xaxis':xaxis, 'dates':dates}
+    return {'predictors':preds, 'dates':dates}
 
 
 def make_predictions(hourdat):
-    with open('meanwait_model.pkl', 'rb') as f:
+    with open('tweet_model.pkl', 'rb') as f:
         model = dill.load(f)
     response = model.predict(hourdat)
     return response
@@ -123,15 +123,14 @@ def get_query():
 
         #GET CURRENT WEATHER DATA and PREDICT
         hourdat = get_hourly_forecast(key, code)
-        estimates = np.ndarray.tolist(make_predictions(hourdat['predictors']))
-        xaxis = hourdat['xaxis']
-        #print estimates
+        estimates = np.ndarray.tolist(numpy.asarray(make_predictions(hourdat['predictors'])))
+        #xaxis = hourdat['xaxis']
+        sendtojs = [{"x":(hourdat["dates"][i]-datetime.fromtimestamp(0)).total_seconds(),"y":estimates[i]} for i in range(len(estimates))]
         
-        return json.dumps(estimates)
+        return json.dumps(sendtojs)
     
  ##########run my app##############
     
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', debug=True)
-    app.run(debug=True)
-
+    app.run(host='0.0.0.0', debug=True)
+    #app.run(debug=True)
