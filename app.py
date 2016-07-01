@@ -8,7 +8,7 @@ import json
 import dill
 import logging
 import sys
-import numpy
+import pandas as pd
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -35,16 +35,23 @@ def get_hourly_forecast(key, code):
         predsdict = {'California Adventure': 0.0,
                     'Clear': 0.0,
                     'Disneyland': 0.0,
+                    'Fog':0.0,
                     'Haze': 0.0,
+                    'Heavy Rain': 0.0,
+                    'Light Rain': 0.0,
+                    'Mist': 0.0,
                     'Mostly Cloudy': 0.0,
                     'Overcast': 0.0,
                     'Partly Cloudy': 0.0,
+                    'Rain': 0.0,
                     'Scattered Clouds': 0.0,
+                    'Unknown': 0.0,
                     'hour': 99.9,
-                    'hour2': 0,
+                    'hour2': 0.0,
                     'temp': 0.0,
                     'temp2': 0.0,
-                    'we_ho': 0,
+                    'business_day': 0.0,
+                    'holiday': 0.0,
                     'wind': 0.0,
                     'wind2': 0.0}
         predsdict[code] = 1.0
@@ -53,30 +60,115 @@ def get_hourly_forecast(key, code):
         predsdict['wind'] = float(line[1].get('english'))
         predsdict['wind2'] = predsdict['wind']**2
         predsdict['hour'] = float(line[2].get('hour_padded'))
-        predsdict['hour2'] = predsdict['hour']**2 
-        predsdict[line[3]] = 1.0
+        predsdict['hour2'] = predsdict['hour']**2
+        predsdict[line[3]] = 1.0 #set conditions
 
-        #print line[2]
-        #dates.append(datetime(int(line[2]["year"]),int(line[2]["mon"]),int(line[2]["mday"]),int(line[2]["hour"]),int(line[2]["min"]),int(line[2]["sec"])))
         dates.append(int(line[2]['epoch']))
-        #dates.append(datetime.strptime(line[2].get('pretty'), "%I:%M %p %Z on %B %d, %Y"))
         date=datetime.utcfromtimestamp(int(line[2]['epoch']))
-        if(date.weekday() >= 5 or date in us_holidays):
-            predsdict['we_ho'] = 1
-        #if predsdict['hour'] >= 8 and predsdict['hour'] <= 22:
+        if(date.weekday() >= 5):
+            predsdict['business_day'] = 1
+        if(date in us_holidays):
+            predsdict['holiday'] = 1
         preds.append(predsdict)
     
     #return variables needed later
     return {'predictors':preds, 'dates':dates}
 
 
-def make_predictions(hourdat):
-    with open('tweet_model.pkl', 'rb') as f:
+def get_daily_forecast(key, code):
+    #open webpage
+    f = urllib2.urlopen('http://api.wunderground.com/api/%s/forecast10day/q/CA/KFUL.json'%(key))
+    json_string = f.read()
+    parsed_json = json.loads(json_string)
+    f.close()
+
+    #get needed dictionaries from json
+    days = parsed_json['forecast']['simpleforecast']['forecastday']
+    predvars = ['avehumidity', 'avewind', 'conditions', 'date', 'high', 'low', 'qpf_day']
+    entries = [[x[column] for column in predvars] for x in days]
+
+    #cycle through and assign values for predictors
+    dailydates = []
+    dailypreds = []
+    us_holidays = holidays.UnitedStates()
+    for line in entries:
+        predsdict = {'California Adventure': 0.0,
+                    'Clear': 0.0,
+                    'Disneyland': 0.0,
+                    'Haze': 0.0,
+                    'Heavy Rain': 0.0,
+                    'Light Rain': 0.0,
+                    'Mostly Cloudy': 0.0,
+                    'Overcast': 0.0,
+                    'Partly Cloudy': 0.0,
+                    'dow': 0,
+                    'temp': 0.0,
+                    'temp2': 0.0, 
+                    'lotemp': 0.0,
+                    'lotemp2': 0.0, 
+                    'business_day': 0.0,
+                    'holiday': False,
+                    'wind': 0.0,
+                    'wind2': 0.0, 
+                    'humidity':0.0, 
+                    'precip': 0.0}
+        predsdict[code] = 1.0
+        predsdict['humidity'] = float(line[0])
+        predsdict['wind'] = float(line[1].get('mph'))
+        predsdict['wind2'] = predsdict['wind']**2
+        predsdict['wind'] = float(line[1].get('mph'))
+        predsdict['temp'] = float(line[4].get('fahrenheit'))
+        predsdict['temp2'] = predsdict['temp']**2
+        predsdict['lotemp'] = float(line[5].get('fahrenheit'))
+        predsdict['lotemp2'] = predsdict['lotemp']**2
+        predsdict['precip'] = line[6].get('in')
+        if not predsdict['precip']: predsdict['precip'] = 0.0
+        predsdict[line[2]] = 1.0
+        
+        dailydates.append(int(line[3]['epoch']))
+        date=datetime.utcfromtimestamp(int(line[3]['epoch']))
+        if(date.weekday() >= 5):
+            predsdict['business_day'] = 1
+        if(date in us_holidays):
+            predsdict['holiday'] = 1
+        dailypreds.append(predsdict)
+        
+    #return variables needed later
+    return {'predictors':dailypreds, 'dates':dailydates}
+
+
+def make_hourly_predictions(hourdat):
+    with open('hourly_model.pkl', 'rb') as f:
         model = dill.load(f)
     response = model.predict(hourdat)
     return response
 
-#def make_plot()
+
+def make_daily_predictions(dailydat):
+    with open('fiveday_model.pkl', 'rb') as f:
+        model = dill.load(f)
+    response = model.predict(dailydat)
+    return response
+
+
+def get_hourly_averages(code):
+    with open('hourly_averages.pkl', 'rb') as f:
+        data = dill.load(f)
+    hourly_averages = {}   
+    for line in data:
+        if line['search'] == code:
+            hourly_averages[line['hour']] = line['peracre']
+    return hourly_averages
+
+            
+def get_daily_averages(code):
+    with open('day_averages.pkl', 'rb') as f:
+        data = dill.load(f)
+    daily_averages = {}   
+    for line in data:
+        if line['search'] == code:
+             daily_averages[line['dow']] = line['peracre']
+    return daily_averages
 
 
 #########functions for running the app###########
@@ -95,19 +187,7 @@ def runmypage():
 @app.route('/result', methods=['GET','POST'])
 def getresult():
     code = request.form['option']
-    #key = '85df9c6c899ae271'  #fix this later
-
-    #GET CURRENT WEATHER DATA and PREDICT
-    #hourdat = get_hourly_forecast(key, code)
-    #estimates = np.ndarray.tolist(make_predictions(hourdat['predictors']))
-    #estsend = json.dumps(estimates)
-
-    #SET UP VARIABLES FOR HTML
-    #temp = current['temp']
-    #wind = current['wind']
-    
-    #RENDER
-    return render_template('result.html', code=code)#, temp=temp, wind=wind)
+    return render_template('result.html', code=code)
 
     
 @app.route('/info', methods=['GET','POST'])
@@ -120,16 +200,47 @@ def get_specs():
 def get_query():
     if request.method=='GET':
         code = request.args.get('option')
-        #print request.form
-        key = '85df9c6c899ae271'  #fix this later
-
-        #GET CURRENT WEATHER DATA and PREDICT
+        key = '85df9c6c899ae271'
         hourdat = get_hourly_forecast(key, code)
-        estimates = np.ndarray.tolist(numpy.asarray(make_predictions(hourdat['predictors'])))
-        #xaxis = hourdat['xaxis']
-        sendtojs = [{"x":hourdat["dates"][i],"y":estimates[i]} for i in range(len(estimates))]
+        averages = get_hourly_averages(code)
+        estimates = np.ndarray.tolist(np.asarray(make_hourly_predictions(hourdat['predictors'])))
+        hourlyaverage = []
+        dates = []
+        for i in hourdat["dates"]:
+            date = datetime.fromtimestamp(i)
+            hour = date.hour
+            if hour >= 8 and hour <= 22:
+                hourlyaverage.append(averages[hour])
+                dates.append(i)
+            if hour < 8 or hour > 22:
+                hourlyaverage.append(None)
+                dates.append(i)
+                estimates[hour] = None
+            dates.append(i)
+        sendtojs = [{"x":dates[i],"y":estimates[i], "y2":hourlyaverage[i]} for i in range(len(estimates))]
         
         return json.dumps(sendtojs)
+
+    
+@app.route('/dailyquery', methods=['GET','POST'])
+def get_query2():
+    if request.method=='GET':
+        code = request.args.get('option')
+        key = '85df9c6c899ae271'
+        dailydat = get_daily_forecast(key, code)
+        daverages = get_daily_averages(code)
+        dailyestimates = np.ndarray.tolist(np.asarray(make_daily_predictions(dailydat['predictors'])))
+        dailyaverage = []
+        dates = []
+        for i in dailydat["dates"]:
+            date = datetime.fromtimestamp(i)
+            dow = date.weekday()
+            dailyaverage.append(daverages[dow])
+            dates.append(i)
+        dailysendtojs = [{"x":dates[i],"y":dailyestimates[i], "y2":dailyaverage[i]} for i in range(len(dailyestimates))]
+        
+        return json.dumps(dailysendtojs)
+
     
  ##########run my app##############
     

@@ -42,7 +42,7 @@ svg{margin-left:5; margin-right:auto; display:block;}
  
 <h3>Crowd levels for next 36 hours<br></h3>
 
-<div id="chart2">
+<div id="chart">
 <svg style="height:400px;width:875px"> </svg>
 </div>
 <script type="text/javascript">
@@ -51,43 +51,110 @@ var chart;
 var chart_data;
 
 nv.addGraph(function() {
-chart = nv.models.lineChart().margin({left: 100});
+  chart = nv.models.lineChart()
+                .margin({left: 100})
+                .useInteractiveGuideline(true) ;
 
-  chart.xAxis     //Chart x-axis settings
-.axisLabel('Time (PST)')
-.tickFormat(function(d) {
-return d3.time.format('%H:%M')(new Date(1000*d))
+  chart.xAxis     
+      .axisLabel('Time (PST)')
+      .tickFormat(function(d) {
+          return d3.time.format('%H:%M')(new Date(1000*d))
           });
-//      .tickFormat(d3.format(',r'));
 
-  chart.yAxis     //Chart y-axis settings
-      .axisLabel('Standardized crowd prediction')
+  chart.yAxis 
+      .axisLabel('Crowd prediction (tweets per acre)')
       .tickFormat(d3.format('.02f'));
 
-  chart_data=d3.select('#chart2 svg').datum([]);
+  chart_data=d3.select('#chart svg').datum([]);
   chart_data.transition().duration(500).call(chart);
 
   nv.utils.windowResize(chart.update);
 
   return chart;
 });
+
+function parse_data(result){
+  var estimates=[];
+  var averages=[];
+
+  for(var i=0; i<result.length; i++) {
+      estimates.push({"x":result[i]["x"], "y":result[i]["y"]});
+      averages.push({"x":result[i]["x"], "y":result[i]["y2"]});
+}
+
+  var packed_data = [{"key":"Model estimate", "values":result, "color": '#ff7f0e'},
+                     {"key":"Average hourly level", "values":averages, "color":'#7777ff'}];
+
+  chart_data.datum(packed_data).transition().duration(500).call(chart);
+};
+
 //**************************************
 
 $.getJSON("/query?option={{code}}",function(result){
 
-data=[{"key":"Estimate","values":result}];
-console.log(result)
-
-chart_data.datum(data).transition().duration(500).call(chart);
+parse_data(result);
+//console.log(result, estimates, averages);
 
 });
 
 </script>
 
+
 <h3>Crowd levels for next 5 days</h3>
 
-This page is still under construction! More predictions will
-be added soon.<br><br><br>
+<div id="chart2">
+<svg style="height:400px;width:875px"> </svg>
+</div>
+<script type="text/javascript">
+var chart2;
+var chart_data2;
+
+nv.addGraph(function() {
+  chart2 = nv.models.lineChart()
+                .margin({left: 100})
+                .useInteractiveGuideline(true) ;
+
+  chart2.xAxis     
+      .axisLabel('Date')
+      .tickFormat(function(d) {
+          return d3.time.format('%b:%d')(new Date(1000*d))
+          });
+
+  chart2.yAxis 
+      .axisLabel('Crowd prediction (tweets per acre)')
+      .tickFormat(d3.format('.02f'));
+
+  chart_data2=d3.select('#chart2 svg').datum([]);
+  chart_data2.transition().duration(500).call(chart2);
+
+  nv.utils.windowResize(chart2.update);
+
+  return chart2;
+});
+
+//**************************************
+
+$.getJSON("/dailyquery?option={{code}}",function(dailyresult){
+
+var dailyestimates=[];
+var dailyaverages=[];
+
+for(var i=0; i<dailyresult.length; i++) {
+  dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
+  dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
+}
+
+packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
+        {"key":"Average daily level", "values":dailyaverages, "color": '#7777ff'}];
+
+//console.log(dailyresult, estimates, averages)
+
+chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
+
+});
+
+</script>
+
 
 <b>Learn more about the <a href="/info">technical details</a> of this project.</b><br><br>
 
