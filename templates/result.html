@@ -100,7 +100,7 @@ parse_data(result);
 </script>
 
 
-<h3>Crowd levels for next 5 days</h3>
+<h3>Crowd levels for next 10 days</h3>
 
 <div id="chart2">
 <svg style="height:400px;width:875px"> </svg>
@@ -117,7 +117,7 @@ nv.addGraph(function() {
   chart2.xAxis     
       .axisLabel('Date')
       .tickFormat(function(d) {
-          return d3.time.format('%b:%d')(new Date(1000*d))
+          return d3.time.format('%b %d')(new Date(1000*d))
           });
 
   chart2.yAxis 
