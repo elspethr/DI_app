@@ -74,16 +74,9 @@ nv.addGraph(function() {
 });
 
 function parse_data(result){
-  var estimates=[];
-  var averages=[];
 
-  for(var i=0; i<result.length; i++) {
-      estimates.push({"x":result[i]["x"], "y":result[i]["y"]});
-      averages.push({"x":result[i]["x"], "y":result[i]["y2"]});
-}
-
-  var packed_data = [{"key":"Model estimate", "values":result, "color": '#ff7f0e'},
-                     {"key":"Average hourly level", "values":averages, "color":'#7777ff'}];
+  var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
+                     {"key":"Average hourly level", "values":result["averages"], "color":'#7777ff'}];
 
   chart_data.datum(packed_data).transition().duration(500).call(chart);
 };

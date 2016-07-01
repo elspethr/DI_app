@@ -201,26 +201,27 @@ def get_query():
     if request.method=='GET':
         code = request.args.get('option')
         key = '85df9c6c899ae271'
-        hourdat = get_hourly_forecast(key, code)
-        averages = get_hourly_averages(code)
-        estimates = np.ndarray.tolist(np.asarray(make_hourly_predictions(hourdat['predictors'])))
-        hourlyaverage = []
-        dates = []
-        for i in hourdat["dates"]:
-            date = datetime.fromtimestamp(i)
-            hour = date.hour
-            if hour >= 8 and hour <= 22:
-                hourlyaverage.append(averages[hour])
-                dates.append(i)
-            if hour < 8 or hour > 22:
-                hourlyaverage.append(None)
-                dates.append(i)
-                estimates[hour] = None
-            dates.append(i)
-        sendtojs = [{"x":dates[i],"y":estimates[i], "y2":hourlyaverage[i]} for i in range(len(estimates))]
-        
-        return json.dumps(sendtojs)
 
+        park_code="Disneyland"
+
+        hourlydat=get_hourly_forecast('85df9c6c899ae271', park_code)
+        hourlyavgs=get_hourly_averages(park_code)
+
+        averages=[]
+        estimates=[]
+        predictions=make_hourly_predictions(hourlydat["predictors"])
+        for i in range(len(hourlydat["predictors"])):
+            hour=hourlydat["predictors"][i]["hour"]
+            if hour in hourlyavgs:
+                averages.append({"x":hourlydat["dates"][i],"y":hourlyavgs[hour]})
+                estimates.append({"x":hourlydat["dates"][i],"y":predictions[i]})
+            else:
+                averages.append({"x":hourlydat["dates"][i],"y":None})
+                estimates.append({"x":hourlydat["dates"][i],"y":None})
+        
+        results={"averages":averages,"estimates":estimates}
+        
+        return json.dumps(results)
     
 @app.route('/dailyquery', methods=['GET','POST'])
 def get_query2():
@@ -242,8 +243,11 @@ def get_query2():
         return json.dumps(dailysendtojs)
 
     
- ##########run my app##############
+##########run my app##############
+import pprint
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
     #app.run(debug=True)
+
+    #pprint.pprint(make_hourly_predictions(hourlydat["predictors"]))
