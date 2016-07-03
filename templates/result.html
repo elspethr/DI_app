@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 
 <head>
@@ -25,6 +26,7 @@ svg{margin-left:5; margin-right:auto; display:block;}
 
 </head>
 
+
 <body>
 
 <div class=padded>
@@ -36,9 +38,7 @@ svg{margin-left:5; margin-right:auto; display:block;}
 </tr>
 </table>
   
-<h2>{{code}} summary</h2>
-
-<!--Current weather conditions: {{temp}} &#8457;, wind {{wind}} miles per hour.-->
+<h2>{{code}} crowd predictions</h2>
  
 <h3>Crowd levels for next 36 hours<br></h3>
 
@@ -138,7 +138,7 @@ for(var i=0; i<dailyresult.length; i++) {
 }
 
 packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
-        {"key":"Average daily level", "values":dailyaverages, "color": '#7777ff'}];
+                {"key":"Average daily level", "values":dailyaverages, "color": '#7777ff'}];
 
 //console.log(dailyresult, estimates, averages)
 
@@ -148,6 +148,9 @@ chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
 
 </script>
 
+
+
+<br><br>
 
 <b>Learn more about the <a href="/info">technical details</a> of this project.</b><br><br>
 

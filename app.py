@@ -106,12 +106,19 @@ def get_daily_forecast(key, code):
                     'temp2': 0.0, 
                     'lotemp': 0.0,
                     'lotemp2': 0.0, 
-                    'business_day': 0.0,
+                    'business_day': False,
                     'holiday': False,
                     'wind': 0.0,
                     'wind2': 0.0, 
                     'humidity':0.0, 
-                    'precip': 0.0}
+                    'precip': 0.0,
+                     0:0,
+                     1:0,
+                     2:0,
+                     3:0,
+                     4:0,
+                     5:0,
+                     6:0}
         predsdict[code] = 1.0
         predsdict['humidity'] = float(line[0])
         predsdict['wind'] = float(line[1].get('mph'))
@@ -125,14 +132,17 @@ def get_daily_forecast(key, code):
         if not predsdict['precip']: predsdict['precip'] = 0.0
         predsdict[line[2]] = 1.0
         
-        dailydates.append(int(line[3]['epoch']))
-        date=datetime.utcfromtimestamp(int(line[3]['epoch']))
+        dailydates.append(int(line[3]['epoch'])-28800) #- timedelta(hours=8))
+        date=datetime.utcfromtimestamp(int(line[3]['epoch'])) - timedelta(hours=8)
+        predsdict['dow'] = date.weekday()
+        predsdict['dow2'] = predsdict['dow']**2
+        predsdict[date.weekday()] = 1.0
         if(date.weekday() >= 5):
-            predsdict['business_day'] = 1
+            predsdict['business_day'] = True
         if(date in us_holidays):
-            predsdict['holiday'] = 1
+            predsdict['holiday'] = True
         dailypreds.append(predsdict)
-        
+    #print dailypreds   
     #return variables needed later
     return {'predictors':dailypreds, 'dates':dailydates}
 
@@ -201,11 +211,8 @@ def get_query():
     if request.method=='GET':
         code = request.args.get('option')
         key = '85df9c6c899ae271'
-
-        park_code="Disneyland"
-
-        hourlydat=get_hourly_forecast('85df9c6c899ae271', park_code)
-        hourlyavgs=get_hourly_averages(park_code)
+        hourlydat=get_hourly_forecast(key, code)
+        hourlyavgs=get_hourly_averages(code)
 
         averages=[]
         estimates=[]
@@ -223,14 +230,17 @@ def get_query():
         
         return json.dumps(results)
     
+    
 @app.route('/dailyquery', methods=['GET','POST'])
 def get_query2():
     if request.method=='GET':
         code = request.args.get('option')
+        #code = 'Disneyland'
         key = '85df9c6c899ae271'
         dailydat = get_daily_forecast(key, code)
         daverages = get_daily_averages(code)
         dailyestimates = np.ndarray.tolist(np.asarray(make_daily_predictions(dailydat['predictors'])))
+        #print dailyestimates
         dailyaverage = []
         dates = []
         for i in dailydat["dates"]:
@@ -240,7 +250,7 @@ def get_query2():
             dates.append(i)
         dailysendtojs = [{"x":dates[i],"y":dailyestimates[i], "y2":dailyaverage[i]} for i in range(len(dailyestimates))]
         
-        return json.dumps(dailysendtojs)
+    return json.dumps(dailysendtojs)
 
     
 ##########run my app##############
@@ -249,5 +259,4 @@ import pprint
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
     #app.run(debug=True)
-
-    #pprint.pprint(make_hourly_predictions(hourlydat["predictors"]))
+    #get_query2()
