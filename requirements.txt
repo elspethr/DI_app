@@ -7,6 +7,6 @@ oauthlib==0.7.2
 requests>=2.2.1
 numpy==1.11.0
 holidays==0.4.1
-scipy
-sklearn
-pandas
+scipy==0.17.1
+sklearn==0.0
+pandas==0.18.1
