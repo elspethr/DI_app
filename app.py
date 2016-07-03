@@ -239,7 +239,7 @@ def get_query2():
         key = '85df9c6c899ae271'
         dailydat = get_daily_forecast(key, code)
         daverages = get_daily_averages(code)
-        dailyestimates = np.ndarray.tolist(np.asarray(make_daily_predictions(dailydat['predictors'])))
+        dailyestimates = make_daily_predictions(dailydat['predictors'])
         #print dailyestimates
         dailyaverage = []
         dates = []
