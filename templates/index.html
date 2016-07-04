@@ -1,46 +1,214 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Elspeth's Capstone</title>
-<style type="text/css">
-body{color:black; font-size:14px; font-family:"Helvetica Neue",Helvetica, sans-serif; background:#FFFFFF; margin:0px; text-align:center}
-body.center{margin-left=auto; margin-right=auto}
-div{text-align:left; background:#FFFFFF; margin:0 auto}
-div.padded{width:930px; padding-top:20px; padding-right:20px; padding-bottom:20px; padding-left:20px}
-div.tabs{font-size:14px; font-style:bold; background:#583759; text-align:center}
-a{text-decoration: none}
-</style>
+  <title>Crowd Tracker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style>
+  body {
+      font: 400 15px Lato, sans-serif;
+      line-height: 1.8;
+      color: #000000;
+  }
 
-</script>
+  h1 {
+      font-family: Montserrat, sans-serif;
+  }
 
+
+  h2 {
+      font-size: 24px;
+      color: #303030;
+      font-weight: 600;
+      margin-bottom: 30px;
+      font-family: Montserrat, sans-serif;
+  }
+
+  h3 {
+      font-size: 16px;
+      line-height: 1.375em;
+      color: #000000;
+      font-weight: 600;
+  }
+ 
+
+  h4 {
+      font-size: 19px;
+      line-height: 1.375em;
+      color: #303030;
+      font-weight: 400;
+      margin-bottom: 30px;
+  }
+ 
+  .jumbotron {
+      background: url("static/seurat_small.jpg") no-repeat center center;
+      background-size:cover;
+      color: #ffffff;
+      padding: 150px 75px;
+      font-family: Montserrat, sans-serif;
+      text-shadow: 5px 5px 7px black;
+  }
+
+  .container-fluid {
+      padding: 15px 15px;
+  }
+
+  .bg-grey {
+      background-color: #f6f6f6;
+  }
+
+  .thumbnail {
+      padding: 0 0 15px 0;
+      border: none;
+      border-radius: 0;
+  }
+
+  .thumbnail img {
+      width: 100%;
+      height: 100%;
+      margin-bottom: 10px;
+  }
+
+  .panel {
+      border: 1px solid #000000;
+      background-color: #583759;
+      color: #ffffff;
+      border-radius:0 !important;
+      transition: box-shadow 0.5s;
+  }
+
+  .panel:hover {
+      box-shadow: 5px 0px 20px rgba(0,0,0, .4);
+  }
+
+  .navbar {
+      margin-bottom: 0;
+      background-color: #583759;
+      z-index: 9999;
+      border: 0;
+      font-size: 12px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      font-family: Montserrat, sans-serif;
+  }
+
+  .navbar li a, .navbar .navbar-brand {
+      color: #fff !important;
+  }
+
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #583759 !important;
+      background-color: #fff !important;
+  }
+
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+
+  footer .glyphicon {
+      font-size: 20px;
+      margin-bottom: 10px;
+     color: #583759;
+  }
+
+  .icons {
+float: center;
+display: inline;
+  }
+
+  </style>
 </head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
-<body class="center">
-<div class="padded">
-<table border="0" cellpadding="15" cellspacing="0">
-<tr>
-<td width="900px" height="560" background="static/seurat_small.jpg" valign="bottom" align="right">
-  <br><br><FONT size="+3" color="white"><b>Far from the madding crowd?</b></FONT><br>
-</td>
-</tr>
-</table>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">TDI Capstone</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+	<li><a href="/index">Main</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-<h3>Find out how busy your favorite outdoor park will be over the next 10 days.</h3>
+<div class="jumbotron text-center">
+  <h1>Far from the madding crowd?</h1>
+</div>
+
+
+<!-- Container (Content Section) -->
+<div name="content" class="container-fluid">
+  <div class="text-center">
+    <h2>Find out how busy your favourite L.A. area theme parks will
+      be over the next 10 days!</h2>
+    <h4>Choose a park to view the crowd level estimates. Predictions
+    are based on the current weather forecast and twitter data.</h4>
+  </div>
+  <div class=metanav>
+    <div class="row">
+       <a href="result?option=Disneyland">
+          <div class="col-sm-6 col-xs-12">
+            <div class="panel panel-default text-center">
+              <h1>Disneyland</h1>
+	    </div>
+	  </div>
+       </a>
+       <a href="result?option=California Adventure">
+	 <div class="col-sm-6 col-xs-12">
+           <div class="panel panel-default text-center">
+             <h1>California Adventure</h1>
+           </div>
+         </div>
+       </a>
+	 </div>
+	 </div>
+    <div class="text-center">
+       <h2>More parks coming soon!</h2>
+  </div>
+</div>
+
+
+<!-- Container (About Section) -->
+<div class="container-fluid bg-grey">
+  <a name="about"></a>
+  <div class="text-left">
+    <h2>Technical Description</h2>
+<p>This website is a <a href="https://www.python.org/">python</a> app that uses <a href=https://pypi.python.org/pypi/Flask"">Flask</a>. When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate crowd level predictions for the next few days.</p>
+
+<p>These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user. Plots are rendered using <a href="http://nvd3.org/">nvd3</a> components and the <a href="http://d3js.org/">d3</a> JavaScript library.</p>
   
-<div class=metanav>
-  <h2>Please choose a park:</h2>
-  <form id='input' method='post' action='result'>	
-  <p>
-  <input type="radio" name='option' value='Disneyland'> Disneyland<br>
-  <input type="radio" name='option' value='California Adventure'> California Adventure<br><br>
-  <input type="submit" value="Submit">
-  </p>
-  </form>
+<p>The current models are a combination of linear regression with k-nearest neighbors and Random Forest models of the regression residuals. Current model accuracy levels are 62% on hourly models and 78% on daily models.</p>
+    </div>
 </div>
 
-<h3>More parks coming soon!</h3>
 
-<FONT size="-1"><i>Website &copy; Elspeth Ready 2016; Header painting by <a href="https://en.wikipedia.org/wiki/A_Sunday_Afternoon_on_the_Island_of_La_Grande_Jatte">Georges Seurat</a></i></FONT><br>
+<footer class="container-fluid text-center">
+ <a name="contact"></a>
+  <a href="#" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+<h3>Created by Elspeth Ready</h3>
+<div class="icons">
+<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;""></i></a>
 </div>
+</footer>
+
 </body>
+</html>

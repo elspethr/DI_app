@@ -194,9 +194,9 @@ def runmypage():
         return render_template('index.html')
     
     
-@app.route('/result', methods=['GET','POST'])
+@app.route('/result', methods=['GET'])
 def getresult():
-    code = request.form['option']
+    code = request.args.get('option')
     return render_template('result.html', code=code)
 
     
@@ -257,6 +257,6 @@ def get_query2():
 import pprint
     
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', debug=True)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
+    #app.run(debug=True)
     #get_query2()

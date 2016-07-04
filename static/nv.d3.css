@@ -158,7 +158,7 @@ svg {
 
 
 svg text {
-  font: normal 12px Arial;
+  font: normal 16px Arial;
 }
 
 svg .title {
@@ -361,7 +361,7 @@ svg .title {
 
 .nvd3 .nv-groups path.nv-line {
   fill: none;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
   /*
   stroke-linecap: round;
   shape-rendering: geometricPrecision;
@@ -410,8 +410,8 @@ svg .title {
   */
 
 .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-point {
-  fill-opacity: 0;
-  stroke-opacity: 0;
+  fill-opacity: 1;
+  stroke-opacity: 1;
 }
 
 .nvd3.nv-scatter.nv-single-point .nv-groups .nv-point {

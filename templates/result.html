@@ -1,49 +1,155 @@
-<!doctype html>
-
+!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <title>Crowd Tracker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
+  <link href="static/nv.d3.css" rel="stylesheet">
+  <script src="static/d3.v3.js"></script>
+  <script src="static/nv.d3.js"></script>
+  <script src="static/jquery-3.0.0.min.js"></script>
+ <style>
+  body {
+      font: 400 15px Lato, sans-serif;
+      line-height: 1.8;
+      color: #000000;
+  }
 
-<meta charset="utf-8">
+  h1 {
+      font-family: Montserrat, sans-serif;
+  }
 
-<style type="text/css">
-body{color:black; font-size:16px; font-family:"Helvetica Neue", Helvetica, sans-serif; background:#FFFFFF; margin:0px; text-align:center}
-body.center{margin-left=auto; margin-right=auto}
-div{text-align:left; background:#FFFFFF; margin:0 auto}
-div.padded{width:930px; padding-top:20px; padding-right:20px;
-padding-bottom:20px; padding-left:20px; text-align:left}
-div.tabs{font-size:14px; font-style:bold; background:#583759;text-align:center}
-a{text-decoration: none}
-svg{margin-left:5; margin-right:auto; display:block;}
-</style>
 
-<link href="static/nv.d3.css" rel="stylesheet">
-<script src="static/d3.v3.js"></script>
-<script src="static/nv.d3.js"></script>
-<script src="static/jquery-3.0.0.min.js"></script>
+  h2 {
+      font-size: 24px;
+      color: #303030;
+      font-weight: 600;
+      margin-bottom: 30px;
+      font-family: Montserrat, sans-serif;
+  }
 
-<title>Park info</title>
+  h4 {
+      font-size: 19px;
+      line-height: 1.375em;
+      color: #303030;
+      font-weight: 400;
+      margin-bottom: 30px;
+  }
+ 
+  .jumbotron {
+      background: url("static/Roller-Coaster.jpg") no-repeat center center;
+      background-size:cover;
+      color: #ffffff;
+      padding: 150px 75px;
+      font-family: Montserrat, sans-serif;
+      text-shadow: 5px 5px 7px black;
+  }
 
+  .container-fluid {
+      padding: 15px 15px;
+  }
+
+  .bg-grey {
+      background-color: #f6f6f6;
+  }
+
+  .thumbnail {
+      padding: 0 0 15px 0;
+      border: none;
+      border-radius: 0;
+  }
+
+  .thumbnail img {
+      width: 100%;
+      height: 100%;
+      margin-bottom: 10px;
+  }
+
+  .panel {
+      border: 1px solid #000000;
+      background-color: #583759;
+      color: #ffffff;
+      border-radius:0 !important;
+      transition: box-shadow 0.5s;
+  }
+
+  .panel:hover {
+      box-shadow: 5px 0px 40px rgba(0,0,0, .5);
+  }
+
+  .navbar {
+      margin-bottom: 0;
+      background-color: #583759;
+      z-index: 9999;
+      border: 0;
+      font-size: 12px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      font-family: Montserrat, sans-serif;
+  }
+
+  .navbar li a, .navbar .navbar-brand {
+      color: #fff !important;
+  }
+
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #583759 !important;
+      background-color: #fff !important;
+  }
+
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+
+  footer .glyphicon {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #583759;
+  }
+  </style>
 </head>
 
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
-<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">TDI Capstone</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav navbar-right">
+       <li><a href="/index">Main</a></li>
+        <li><a href="/index#about">About</a></li>
+        <li><a href="/index#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-<div class=padded>
-{{div|safe}}
-<table border="0" cellpadding="0" cellspacing="0">
-<tr>
-<td width="925px" height="271" background="static/rollercoaster_small.jpg" valign="bottom" align="right">
-</td>
-</tr>
-</table>
-  
-<h2>{{code}} crowd predictions</h2>
+
+<div class="jumbotron text-center">
+  <h1>{{code}} crowd predictions</h1>
+</div>
+
+<div name="content" class="container-fluid">
+  <div class="text-center">
  
-<h3>Crowd levels for next 36 hours<br></h3>
+<h2>Crowd levels for next 36 hours</h2>
 
 <div id="chart">
-<svg style="height:400px;width:875px"> </svg>
+<svg style="height:450px; text-align:center;"> </svg>
 </div>
 <script type="text/javascript">
 
@@ -59,12 +165,14 @@ nv.addGraph(function() {
       .axisLabel('Time (PST)')
       .tickFormat(function(d) {
           return d3.time.format('%H:%M')(new Date(1000*d))
-          });
+      })
 
+  chart.xScale(d3.time.scale());
+    
   chart.yAxis 
       .axisLabel('Crowd prediction (tweets per acre)')
       .tickFormat(d3.format('.02f'));
-
+    
   chart_data=d3.select('#chart svg').datum([]);
   chart_data.transition().duration(500).call(chart);
 
@@ -76,7 +184,7 @@ nv.addGraph(function() {
 function parse_data(result){
 
   var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
-                     {"key":"Average hourly level", "values":result["averages"], "color":'#7777ff'}];
+                     {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
 
   chart_data.datum(packed_data).transition().duration(500).call(chart);
 };
@@ -91,12 +199,16 @@ parse_data(result);
 });
 
 </script>
+</div>
+</div>
 
 
-<h3>Crowd levels for next 10 days</h3>
+<div name="content" class="container-fluid">
+<div class="text-center">
+<h2>Crowd levels for next 10 days</h2>
 
-<div id="chart2">
-<svg style="height:400px;width:875px"> </svg>
+<div id="chart2" style="height:450px;text-align:center;">
+<svg> </svg>
 </div>
 <script type="text/javascript">
 var chart2;
@@ -111,8 +223,11 @@ nv.addGraph(function() {
       .axisLabel('Date')
       .tickFormat(function(d) {
           return d3.time.format('%b %d')(new Date(1000*d))
-          });
+      });
+      /*.tickValues(x);*/
 
+   chart2.xScale(d3.time.scale());
+    
   chart2.yAxis 
       .axisLabel('Crowd prediction (tweets per acre)')
       .tickFormat(d3.format('.02f'));
@@ -131,14 +246,16 @@ $.getJSON("/dailyquery?option={{code}}",function(dailyresult){
 
 var dailyestimates=[];
 var dailyaverages=[];
+var x=[];
 
 for(var i=0; i<dailyresult.length; i++) {
   dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
   dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
+  x.push(dailyresult[i]["x"]);
 }
 
 packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
-                {"key":"Average daily level", "values":dailyaverages, "color": '#7777ff'}];
+                {"key":"Average daily level", "values":dailyaverages, "color": '#205D7A'}];
 
 //console.log(dailyresult, estimates, averages)
 
@@ -147,16 +264,9 @@ chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
 });
 
 </script>
-
-
-
-<br><br>
-
-<b>Learn more about the <a href="/info">technical details</a> of this project.</b><br><br>
-
-<a href="/index"><b>Back to main page</b></a>
-
 </div>
+</div>
+
 
 </body>
 </html>
