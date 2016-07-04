@@ -13,7 +13,7 @@
   <style>
   body {
       font: 400 15px Lato, sans-serif;
-      line-height: 1.8;
+      line-height: 1.6;
       color: #000000;
   }
 
@@ -154,10 +154,16 @@ display: inline;
 
 
 <!-- Container (Content Section) -->
+<div name="content" class="container-fluid bg-grey">
+  <div class="text-center">
+    <h2>Find out how busy your favorite L.A. area theme parks will
+    be over the next 10 days!</h2>
+  </div>
+  </div>
+
+
 <div name="content" class="container-fluid">
   <div class="text-center">
-    <h2>Find out how busy your favourite L.A. area theme parks will
-      be over the next 10 days!</h2>
     <h4>Choose a park to view the crowd level estimates. Predictions
     are based on the current weather forecast and twitter data.</h4>
   </div>
@@ -192,7 +198,7 @@ display: inline;
     <h2>Technical Description</h2>
 <p>This website is a <a href="https://www.python.org/">python</a> app that uses <a href=https://pypi.python.org/pypi/Flask"">Flask</a>. When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate crowd level predictions for the next few days.</p>
 
-<p>These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user. Plots are rendered using <a href="http://nvd3.org/">nvd3</a> components and the <a href="http://d3js.org/">d3</a> JavaScript library.</p>
+<p>These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user. Plots are rendered using <a href="http://nvd3.org/">nvd3</a> components and the <a href="http://d3js.org/">d3</a> JavaScript library. The webpage was built using <a href="http://getbootstrap.com/getting-started/">bootstrap</a>.</p>
   
 <p>The current models are a combination of linear regression with k-nearest neighbors and Random Forest models of the regression residuals. Current model accuracy levels are 62% on hourly models and 78% on daily models.</p>
     </div>
@@ -206,7 +212,7 @@ display: inline;
   </a>
 <h3>Created by Elspeth Ready</h3>
 <div class="icons">
-<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;""></i></a>
+<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;"></i></a>
 </div>
 </footer>
 

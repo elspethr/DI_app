@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
   <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
   <link href="static/nv.d3.css" rel="stylesheet">
@@ -16,7 +17,7 @@
  <style>
   body {
       font: 400 15px Lato, sans-serif;
-      line-height: 1.8;
+      line-height: 1.6;
       color: #000000;
   }
 
@@ -33,6 +34,13 @@
       font-family: Montserrat, sans-serif;
   }
 
+  h3 {
+      font-size: 16px;
+      line-height: 1.375em;
+      color: #000000;
+      font-weight: 600;
+  }
+
   h4 {
       font-size: 19px;
       line-height: 1.375em;
@@ -42,7 +50,7 @@
   }
  
   .jumbotron {
-      background: url("static/Roller-Coaster.jpg") no-repeat center center;
+      background: url("static/seurat_small.jpg") no-repeat center center;
       background-size:cover;
       color: #ffffff;
       padding: 150px 75px;
@@ -113,6 +121,12 @@
       margin-bottom: 20px;
       color: #583759;
   }
+
+  .icons {
+      float: center;
+      display: inline;
+  }
+
   </style>
 </head>
 
@@ -132,7 +146,7 @@
     <ul class="nav navbar-nav navbar-right">
        <li><a href="/index">Main</a></li>
         <li><a href="/index#about">About</a></li>
-        <li><a href="/index#contact">Contact</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
   </div>
@@ -140,13 +154,19 @@
 
 
 <div class="jumbotron text-center">
-  <h1>{{code}} crowd predictions</h1>
 </div>
+
+<div name="content" class="container-fluid bg-grey">
+  <div class="text-center">
+    <h1>{{code}} crowd predictions</h1>
+    </div>
+    </div>
 
 <div name="content" class="container-fluid">
   <div class="text-center">
- 
-<h2>Crowd levels for next 36 hours</h2>
+
+    <h2>Crowd levels for next 36 hours</h2>
+    </div>
 
 <div id="chart">
 <svg style="height:450px; text-align:center;"> </svg>
@@ -159,18 +179,18 @@ var chart_data;
 nv.addGraph(function() {
   chart = nv.models.lineChart()
                 .margin({left: 100})
-                .useInteractiveGuideline(true) ;
+                .useInteractiveGuideline(true);
 
   chart.xAxis     
       .axisLabel('Time (PST)')
       .tickFormat(function(d) {
           return d3.time.format('%H:%M')(new Date(1000*d))
-      })
+      });
 
   chart.xScale(d3.time.scale());
     
   chart.yAxis 
-      .axisLabel('Crowd prediction (tweets per acre)')
+      .axisLabel('Crowd prediction (tweets per acre per hour)')
       .tickFormat(d3.format('.02f'));
     
   chart_data=d3.select('#chart svg').datum([]);
@@ -179,22 +199,23 @@ nv.addGraph(function() {
   nv.utils.windowResize(chart.update);
 
   return chart;
+    
 });
-
-function parse_data(result){
-
-  var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
-                     {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
-
-  chart_data.datum(packed_data).transition().duration(500).call(chart);
-};
 
 //**************************************
 
 $.getJSON("/query?option={{code}}",function(result){
+    
+  var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
+                     {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
+  var x = [];
+    
+  for(var i=0; i<result["estimates"].length; i+=4){
+    x.push(result["estimates"][i]["x"]);
+  }
 
-parse_data(result);
-//console.log(result, estimates, averages);
+  chart.xAxis.tickValues(x);	
+  chart_data.datum(packed_data).transition().duration(500).call(chart);
 
 });
 
@@ -203,33 +224,41 @@ parse_data(result);
 </div>
 
 
+<div class="container-fluid bg-grey">
+  <a name="about"></a>
+    <div class="text-left">
+    <p>Hourly predictions chart shows the expected crowd level at each hour of the day from 8am to 10pm (in orange). The blue line shows the average crowd level at that time of day for all days in the historical dataset. Crowd metric for hourly model is unique users tweeting per hour, standardized by park size.</p>
+</div>
+</div>
+
 <div name="content" class="container-fluid">
 <div class="text-center">
+	  
 <h2>Crowd levels for next 10 days</h2>
 
 <div id="chart2" style="height:450px;text-align:center;">
 <svg> </svg>
 </div>
 <script type="text/javascript">
+
 var chart2;
 var chart_data2;
 
 nv.addGraph(function() {
   chart2 = nv.models.lineChart()
                 .margin({left: 100})
-                .useInteractiveGuideline(true) ;
+                .useInteractiveGuideline(true);
 
   chart2.xAxis     
       .axisLabel('Date')
       .tickFormat(function(d) {
-          return d3.time.format('%b %d')(new Date(1000*d))
+          return d3.time.format('%b %d')(new Date(d*1000))
       });
-      /*.tickValues(x);*/
 
-   chart2.xScale(d3.time.scale());
+  chart2.xScale(d3.time.scale());
     
   chart2.yAxis 
-      .axisLabel('Crowd prediction (tweets per acre)')
+      .axisLabel('Crowd prediction (tweets per acre per day)')
       .tickFormat(d3.format('.02f'));
 
   chart_data2=d3.select('#chart2 svg').datum([]);
@@ -238,35 +267,56 @@ nv.addGraph(function() {
   nv.utils.windowResize(chart2.update);
 
   return chart2;
+
 });
 
 //**************************************
 
 $.getJSON("/dailyquery?option={{code}}",function(dailyresult){
 
-var dailyestimates=[];
-var dailyaverages=[];
-var x=[];
+  var dailyestimates=[];
+  var dailyaverages=[];
+  var x2=[];
 
-for(var i=0; i<dailyresult.length; i++) {
-  dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
-  dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
-  x.push(dailyresult[i]["x"]);
-}
+  for(var i=0; i<dailyresult.length; i++) {
+      dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
+      dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
+      x2.push(dailyresult[i]["x"]);
+  }
 
-packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
-                {"key":"Average daily level", "values":dailyaverages, "color": '#205D7A'}];
+  //console.log(x2);
 
-//console.log(dailyresult, estimates, averages)
+  packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
+                  {"key":"Average daily level", "values":dailyaverages, "color": '#205D7A'}];
 
-chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
+  chart2.xAxis.tickValues(x2);	
+  chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
 
 });
 
 </script>
 </div>
+    </div>
+
+<div class="container-fluid bg-grey">
+  <a name="about"></a>
+  <div class="text-left">
+    <p>Daily predictions chart shows the expected crowd level for each of the next 10 days (in orange). The blue line shows the average crowd level for the day of the week (e.g., Monday, Tuesday, Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size.</p>
+    </div>
+    </div>
+
+<footer class="container-fluid text-center">
+ <a name="contact"></a>
+  <a href="#" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+<h3>Created by Elspeth Ready</h3>
+<div class="icons">
+<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;"></i></a>
 </div>
+</footer>
 
-
+</body>
+</html>
 </body>
 </html>
