@@ -6,19 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <style>
   body {
-      font: 400 15px Lato, sans-serif;
+      font: 200 15px Lato, sans-serif;
       line-height: 1.6;
       color: #000000;
   }
 
   h1 {
       font-family: Montserrat, sans-serif;
+      margin-bottom: 15px; 
   }
 
 
@@ -26,7 +27,7 @@
       font-size: 24px;
       color: #303030;
       font-weight: 600;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       font-family: Montserrat, sans-serif;
   }
 
@@ -116,12 +117,16 @@
   footer .glyphicon {
       font-size: 20px;
       margin-bottom: 10px;
-     color: #583759;
+      color: #583759;
   }
 
   .icons {
-float: center;
-display: inline;
+     float: center;
+     display: inline;
+  }
+
+  .img-circle {
+     border-radius: 50%;
   }
 
   </style>
@@ -193,27 +198,57 @@ display: inline;
 
 <!-- Container (About Section) -->
 <div class="container-fluid bg-grey">
-  <a name="about"></a>
-  <div class="text-left">
-    <h2>Technical Description</h2>
-<p>This website is a <a href="https://www.python.org/">python</a> app that uses <a href=https://pypi.python.org/pypi/Flask"">Flask</a>. When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate crowd level predictions for the next few days.</p>
-
-<p>These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user. Plots are rendered using <a href="http://nvd3.org/">nvd3</a> components and the <a href="http://d3js.org/">d3</a> JavaScript library. The webpage was built using <a href="http://getbootstrap.com/getting-started/">bootstrap</a>.</p>
+<a name="about"></a> 
+<div class="text-center"> <h2><i class="fa fa-info-circle" style="font-size:30px;padding: 0 10px 0 0;"></i>About</h2></div>
+<div class="col-md-8 col-md-offset-2 text-justify">
   
-<p>The current models are a combination of linear regression with k-nearest neighbors and Random Forest models of the regression residuals. Current model accuracy levels are 62% on hourly models and 78% on daily models.</p>
-    </div>
+<p>This website generates crowd level predictions for outdoor parks using twitter and weather data, and is intended to be a useful application for people trying to plan their recreation time, for companies who hope to make more effective use of advertising time and money, and for planners who want to efficiently deploy services such as transportation. In theory, the models developed here could be extended to any park, so long as enough people find it an interesting place to post about on social media! Both the relationship between <a href="http://datasciencelab.co.uk/research_paper/quantifying-crowd-size-with-mobile-phone-and-twitter-data/">social media posts and crowds</a> and between <a href="https://www.researchgate.net/publication/257668742_Modelling_visitor_attendance_levels_subject_to_day_of_the_week_and_weather_A_comparison_between_linear_regression_models_and_regression_trees">weather and outdoor park use</a> have been documented in scientific research and this project tries to combine these ideas to gain predictive insights.</p>
+
+  <p>Future plans for the project include deploying a map of crowd "hotspots" once enough parks in a regional area are added, and incorporating nlp analysis of tweet content to model when users report crowds and their sentiments about their experience at the park.</p>
+
+  
+  <p>When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate predictions for the next few days. These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels.
+
+</div>
 </div>
 
 
-<footer class="container-fluid text-center">
- <a name="contact"></a>
-  <a href="#" title="To Top">
-    <span class="glyphicon glyphicon-chevron-up"></span>
-  </a>
-<h3>Created by Elspeth Ready</h3>
+<!-- Container (Tech Section) -->
+<div class="container-fluid">
+<div class="text-center"> <h2><i class="fa fa-gears" style="font-size:30px;padding: 0 10px 0 0;"></i>Technical details</h2></div>
+<div class="col-md-8 col-md-offset-2 text-justify">
+
+<p>The current models are a combination of linear regression with k-nearest neighbors and Random Forest models of the regression residuals. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. The current training dataset consists of one full year of tweets from Disneyland and California Adventure (totaling over 150,000 tweets) and hourly weather data from <a href="https://www.wunderground.com/">wunderground.com</a>. To build the models, tweets and weather reports were binned by hour (or by day) to generate crowd level estimates per time period. Several calendar indicator variables (e.g., time, weekday, month of the year) are also included in the models to account for daily, weekly, and seasonal periodicity in park attendance as well as for holiday periods. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user.
+
+<p>The project interface is a <a href=https://pypi.python.org/pypi/Flask"">Flask</a> <a href="https://www.python.org/">python</a> app, and the webpage is built using <a href="http://getbootstrap.com/getting-started/">bootstrap</a>. Plots are rendered using <a href="http://nvd3.org/">nvd3</a> components and the <a href="http://d3js.org/">d3</a> JavaScript library.</p>
+  
+</div>
+</div>
+
+<!-- Container (Contact Section) -->
+<div class="container-fluid bg-grey text-center">
+  <a name="contact"></a>
+  <div class="col-md-8 col-md-offset-2 text-center">
+    <h2><i class="fa fa-paper-plane" style="font-size:30px;padding: 0 5px 0 0;"></i>Contact</h2>
+    <div class="row">
+    <div class="col-md-2 col-md-offset-1">
+    <img class="img-circle" src="static/headshot.jpg" width=125px>
+    </div>
+    <div class="col-md-7 text-justify">
+    <p>Elspeth Ready is an anthropologist and data scientist, combining strong techical skills with extensive field experience studying culture and behaviour. She loves the outdoors and is not a big fan of crowds but finds them interesting to think about. </p>
+    </div>
+    </div>
 <div class="icons">
 <a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;"></i></a>
 </div>
+</div>
+</div>
+  
+<footer class="container-fluid text-center">
+<a href="#" title="To Top"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<h3></h3>
+
+
 </footer>
 
 </body>
