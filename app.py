@@ -194,16 +194,10 @@ def runmypage():
         return render_template('index.html')
     
     
-@app.route('/result', methods=['GET'])
-def getresult():
-    code = request.args.get('option')
-    return render_template('result.html', code=code)
-
-    
-@app.route('/info', methods=['GET','POST'])
-def get_specs():
-    if request.method=='GET':
-        return render_template('info.html')
+#@app.route('/result', methods=['GET'])
+#def getresult():
+#    code = request.args.get('option')
+#    return render_template('result.html', code=code)
 
     
 @app.route('/query', methods=['GET','POST'])
