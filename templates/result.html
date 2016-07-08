@@ -156,7 +156,6 @@
 <div class="jumbotron text-center">
 </div>
 
-<div name="content" class="container-fluid">
 <div class="container-fluid bg-grey">
   <div class="text-center">
     <h1>{{code}} crowd predictions</h1>
@@ -167,10 +166,10 @@
   <div class="text-center">
 
     <h2>Crowd levels for next 36 hours</h2>
-    </div>
+    
 
-<div id="chart" style="height=400px; text-align:center;">
-<svg > </svg>
+<div id="chart" style="height:400px;text-align:center;">
+<svg> </svg>
 </div>
 <script type="text/javascript">
 
@@ -306,7 +305,6 @@ $.getJSON("/dailyquery?option={{code}}",function(dailyresult){
   Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size. If the orange line is higher than the blue line, it indicates higher than average crowds for that day of the week. Accuracy (coefficient of determination) of the daily model is 0.79. </p>
     </div>
     </div>
-</div>
     
 <footer class="container-fluid text-center">
  <a name="contact"></a>
