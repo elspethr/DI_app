@@ -57,7 +57,7 @@
   }
 
   .container-fluid {
-      padding: 15px 15px;
+      padding: 30px 30px;
   }
 
   .bg-grey {
@@ -129,6 +129,13 @@
      border-radius: 50%;
   }
 
+  .bubble { 
+    position: relative; 
+    top: 15px; 
+    height: 125px; 
+    display: table; 
+  }
+
   </style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -195,6 +202,10 @@
   </div>
 </div>
 
+<!--<div id="welcomeDiv"  style="display:none;" class="answer_list" > WELCOME</div><input type="button" name="answer" value="Show Div" onclick="showDiv()" />
+function showDiv() {
+   document.getElementById('welcomeDiv').style.display = "block";
+}-->
 
 <!-- Container (About Section) -->
 <div class="container-fluid bg-grey">
@@ -228,18 +239,18 @@
 <!-- Container (Contact Section) -->
 <div class="container-fluid bg-grey text-center">
   <a name="contact"></a>
+<h2><i class="fa fa-paper-plane" style="font-size:30px;padding: 0 5px 0 0;"></i>Contact</h2>
   <div class="col-md-8 col-md-offset-2 text-center">
-    <h2><i class="fa fa-paper-plane" style="font-size:30px;padding: 0 5px 0 0;"></i>Contact</h2>
     <div class="row">
     <div class="col-md-2 col-md-offset-1">
     <img class="img-circle" src="static/headshot.jpg" width=125px>
     </div>
-    <div class="col-md-7 text-justify">
-    <p>Elspeth Ready is an anthropologist and data scientist, combining strong techical skills with extensive field experience studying culture and behaviour. She loves the outdoors and is not a big fan of crowds but finds them interesting to think about. </p>
+    <div class="col-md-7 bubble text-justify">
+    <p>Elspeth Ready is an anthropologist and data scientist. She loves the outdoors and is not a fan of crowds but finds them (and any other large scale patterning in human culture and behavior) interesting to think about. </p>
     </div>
     </div>
 <div class="icons">
-<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 5px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;"></i></a>
+<a href="mailto:eready@ualberta.net"><i class="fa fa-envelope"  style="font-size:30px;padding: 0 10px 0 0;"></i></a>   <a href="https://www.linkedin.com/in/elspeth-ready-068a96bb"><i class="fa fa-linkedin"  style="font-size:30px;padding: 0 10px 0 10px;"></i></a><a href="http://github.com/elspethr"><i class="fa fa-github" style="font-size:36px;padding: 0 0 0 5px;"></i></a>
 </div>
 </div>
 </div>
