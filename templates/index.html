@@ -212,7 +212,7 @@
 <!-----Graphs------>
 <div id='titleDiv' class="container-fluid bg-mauve text-center" style="display:none;">
   <div id="charttitle"><h1>Crowd Predictions</h1></div>
-  <div class="col-md-2 col-md-offset-5 text-center" style="cursor: pointer;" onclick='hideDiv()'>Hide charts</div>
+  <div class="col-md-2 col-md-offset-5 text-center" style="cursor: pointer;" onclick='hideAllCharts()'><a>Hide charts</a></div>
 </div>
   
 <div id="hourly_loader" class="text-center" style="display:none;"><img src="static/balls.gif" /><h4>Getting data...</h4></div>
@@ -343,6 +343,7 @@ document.getElementById(chart+"_"+section).style.display = "block";
 
 function hideAllCharts()
 {
+document.getElementById("titleDiv").style.display = "none";
 document.getElementById("hourly_loader").style.display = "none";
 document.getElementById("hourly_error").style.display = "none";
 document.getElementById("hourly_graph").style.display = "none";
