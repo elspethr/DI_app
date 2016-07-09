@@ -340,6 +340,17 @@ document.getElementById(chart+"_graph").style.display = "none";
 document.getElementById(chart+"_"+section).style.display = "block";
 }
 
+
+function hideAllCharts()
+{
+document.getElementById("hourly_loader").style.display = "none";
+document.getElementById("hourly_error").style.display = "none";
+document.getElementById("hourly_graph").style.display = "none";
+document.getElementById("daily_loader").style.display = "none";
+document.getElementById("daily_error").style.display = "none";
+document.getElementById("daily_graph").style.display = "none";
+}
+
 function showDiv(id) {
   document.getElementById(id).style.display = "block";
 }
