@@ -9,6 +9,7 @@ import dill
 import logging
 import sys
 import pandas as pd
+import time
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -192,12 +193,6 @@ def main():
 def runmypage():
     if request.method=='GET':
         return render_template('index.html')
-    
-    
-#@app.route('/result', methods=['GET'])
-#def getresult():
-#    code = request.args.get('option')
-#    return render_template('result.html', code=code)
 
     
 @app.route('/query', methods=['GET','POST'])
@@ -205,6 +200,7 @@ def get_query():
     if request.method=='GET':
         code = request.args.get('option')
         key = '85df9c6c899ae271'
+        time.sleep(0.1)
         hourlydat=get_hourly_forecast(key, code)
         hourlyavgs=get_hourly_averages(code)
 
@@ -229,8 +225,8 @@ def get_query():
 def get_query2():
     if request.method=='GET':
         code = request.args.get('option')
-        #code = 'Disneyland'
         key = '85df9c6c899ae271'
+        time.sleep(0.2)
         dailydat = get_daily_forecast(key, code)
         daverages = get_daily_averages(code)
         dailyestimates = make_daily_predictions(dailydat['predictors'])

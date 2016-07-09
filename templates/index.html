@@ -9,8 +9,7 @@
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link href="static/nv.d3.css" rel="stylesheet">
   <script src="static/d3.v3.js"></script>
   <script src="static/nv.d3.js"></script>
@@ -32,16 +31,15 @@
       font-size: 24px;
       color: #303030;
       font-weight: 600;
-      margin-bottom: 25px;
+      margin-bottom: 15px;
       font-family: Montserrat, sans-serif;
   }
 
   h3 {
-      font-size: 16px;
-      line-height: 1.375em;
-      color: #000000;
-      font-weight: 600;
-  }
+      font-family: Montserrat, sans-serif;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
  
 
   h4 {
@@ -62,11 +60,15 @@
   }
 
   .container-fluid {
-      padding: 30px 30px;
+      padding: 20px 25px;
   }
 
   .bg-grey {
       background-color: #f6f6f6;
+  }
+
+  .bg-mauve {
+      background-color: #C6D4DB;
   }
 
   .thumbnail {
@@ -136,13 +138,14 @@
 
   .bubble { 
     position: relative; 
-    top: 15px; 
-    height: 125px; 
-    display: table; 
+    display: table;
+    top: 10px;
+    bottom: 10px;
   }
 
-  </style>
+</style>
 </head>
+
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -182,51 +185,93 @@
 <div name="content" class="container-fluid">
   <div class="text-center">
     <h4>Choose a park to view the crowd level estimates. Predictions
-    are based on the current weather forecast and twitter data.</h4>
+    are based on the current weather forecast and historical twitter data.</h4>
   </div>
   <div class=metanav>
-    <div class="row">
-          <div class="col-sm-6 col-xs-12" onclick="showpark('Disneyland')" style="cursor: pointer;">
+  <div class="row">
+          <div class="col-sm-1 col-xs-0"></div>
+          <div class="col-sm-5 col-xs-12" onclick="showpark('Disneyland')" style="cursor: pointer;">
             <div class="panel panel-default text-center">
-              <h1>Disneyland</h1>
+              <h3>Disneyland</h3>
 	    </div>
 	  </div>
-	 <div class="col-sm-6 col-xs-12" onclick="showpark('California Adventure')" style="cursor: pointer;">
+	 <div class="col-sm-5 col-xs-12" onclick="showpark('California Adventure')" style="cursor: pointer;">
            <div class="panel panel-default text-center">
-             <h1>California Adventure</h1>
+             <h3>California Adventure</h3>
            </div>
-         </div>
+	   </div>
+	   <div class="col-sm-1 col-xs-0"></div>
 	 </div>
 	 </div>
     <div class="text-center">
        <h2>More parks coming soon!</h2>
   </div>
-  </div>
+  </div>  
+
   
-<script>
-function showDiv() {
-  document.getElementById('graphDiv').style.display = "block";
-}
-</script>
-
-<div id="graphDiv"  style="display:none;">
-
-<div name="content" class="container-fluid">
-<div class="container-fluid bg-grey">
-  <div class="text-center">
-    <h1>{{code}} crowd predictions</h1>
-    </div>
-    </div>
+<!-----Graphs------>
+<div id='titleDiv' class="container-fluid bg-mauve text-center" style="display:none;">
+  <div id="charttitle"><h1>Crowd Predictions</h1></div>
+  <div class="col-md-2 col-md-offset-5 text-center" style="cursor: pointer;" onclick='hideDiv()'>Hide charts</div>
+</div>
+  
+<div id="hourly_loader" class="text-center" style="display:none;"><img src="static/balls.gif" /><h4>Getting data...</h4></div>
+<div id="hourly_error" class="text-center" style="display:none;">Error: unable to load data. Please try again.</div>
+<div id="hourly_graph" style="display:none;">
 
 <div class="container-fluid">
-  <div class="text-center">
+<div class="text-center">
+<h2>Crowd levels for next 36 hours</h2>
+</div>
 
-    <h2>Crowd levels for next 36 hours</h2>
-    </div>
-
-<div id="chart" style="text-align:center">
+<div class="col-md-10 col-md-offset-1" id="chart" style="text-align:center">
 <svg style="height:400px;text-align:center;display:block;margin:auto"> </svg>
 </div>
+</div>
+
+<div class="container-fluid bg-mauve">
+<div class="col-md-8 col-md-offset-2 text-justify">
+<p><b>Hourly predictions.</b> The orange line shows the expected crowd level at each hour of the day from 8am to 10pm (in orange) for the next 36 hours, based on the current weather forecast and calendar data (e.g., weekend or holiday).  The blue line shows the average crowd level at that time of day for all days in the historic dataset.  If the orange line is higher than the blue line, it indicates higher than average crowds for that time of day.  Crowd metric for the hourly model is unique users tweeting per hour, standardized by park size.  Accuracy (coefficient of determination) of the hourly prediction model on test data is 0.62.</p>
+</div>
+</div>
+
+</div>
+
+<div id="daily_loader" class="text-center" style="display:none;"><img src="static/balls.gif" /><h4>Getting data...</h4></div>
+<div id="daily_error" class="text-center" style="display:none;">Error: unable to load data. Please try again.</div>
+<div id="daily_graph" style="display:none;">
+
+<div class="container-fluid text-center">
+<h2>Crowd levels for next 10 days</h2>
+<div class="col-md-10 col-md-offset-1" id="chart2" style="text-align:center">
+<svg style="height:400px;text-align:center;display:block;margin:auto"> </svg>
+</div>
+</div>
+
+<div class="container-fluid bg-mauve">
+<div class="col-md-8 col-md-offset-2 text-justify">
+    <p><b>Daily predictions.</b> The orange line shows the expected crowd level for each of the next 10 days. The blue line shows the average crowd level for that day of the week (e.g., Monday, Tuesday,
+  Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size. If the orange line is higher than the blue line, it indicates higher than average crowds for that day of the week. Accuracy (coefficient of determination) of the daily model is 0.79. </p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Container (About Section) -->
+<div class="container-fluid bg-grey">
+<a name="about"></a> 
+<div class="text-center"> <h2><i class="fa fa-info-circle" style="font-size:30px;padding: 0 10px 0 0;"></i>About</h2></div>
+<div class="col-md-8 col-md-offset-2 text-justify">
+  
+<p>This website generates crowd level predictions for outdoor parks using twitter and weather data, and is intended to be a useful application for people trying to plan their recreation time, for companies who hope to make more effective use of advertising time and money, and for planners who want to efficiently deploy services such as transportation. In theory, the models developed here could be extended to any park, so long as enough people find it an interesting place to post about on social media! Both the relationship between <a href="http://datasciencelab.co.uk/research_paper/quantifying-crowd-size-with-mobile-phone-and-twitter-data/">social media posts and crowds</a> and between <a href="https://www.researchgate.net/publication/257668742_Modelling_visitor_attendance_levels_subject_to_day_of_the_week_and_weather_A_comparison_between_linear_regression_models_and_regression_trees">weather and outdoor park use</a> have been documented in scientific research and this project tries to combine these ideas to gain predictive insights.</p>
+
+  <p>Future plans for the project include deploying a map of crowd "hotspots" once enough parks in a regional area are added, and incorporating nlp analysis of tweet content to model when users report crowds and their sentiments about their experience at the park.</p>
+ 
+</div>
+</div>
+</div>
+
 <script type="text/javascript">
 
 var chart;
@@ -258,71 +303,6 @@ nv.addGraph(function() {
     
 });
 
-//**************************************
-
-function showpark(code)
-{
-showDiv();
-$.getJSON("/query?option="+code,function(result){
-    
-  var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
-                     {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
-  var x = [];
-    
-  for(var i=0; i<result["estimates"].length; i+=4){
-    x.push(result["estimates"][i]["x"]);
-  }
-
-  chart.xAxis.tickValues(x);	
-  chart_data.datum(packed_data).transition().duration(500).call(chart);
-
-});
-
-$.getJSON("/dailyquery?option="+code,function(dailyresult){
-
-  var dailyestimates=[];
-  var dailyaverages=[];
-  var x2=[];
-
-  for(var i=0; i<dailyresult.length; i++) {
-      dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
-      dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
-      x2.push(dailyresult[i]["x"]);
-  }
-
-  //console.log(x2);
-
-  packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
-                  {"key":"Average daily level", "values":dailyaverages, "color": '#205D7A'}];
-
-  chart2.xAxis.tickValues(x2);	
-  chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
-
-});
-
-}
-
-</script>
-</div>
-</div>
-
-<div class="container-fluid bg-grey">
-  <a name="about"></a>
-    <div class="text-left">
-    <p><b>Hourly predictions.</b> The orange line shows the expected crowd level at each hour of the day from 8am to 10pm (in orange) for the next 36 hours, based on the current weather forecast and calendar data (e.g., weekend or holiday).  The blue line shows the average crowd level at that time of day for all days in the historic dataset.  If the orange line is higher than the blue line, it indicates higher than average crowds for that time of day.  Crowd metric for the hourly model is unique users tweeting per hour, standardized by park size.  Accuracy (coefficient of determination) of the hourly prediction model on test data is 0.62.</p>
-</div>
-</div>
-
-<div name="content" class="container-fluid">
-<div class="text-center">
-	  
-<h2>Crowd levels for next 10 days</h2>
-
-<div id="chart2" style="height:450px;text-align:center;">
-<svg> </svg>
-</div>
-<script type="text/javascript">
-
 var chart2;
 var chart_data2;
 
@@ -352,41 +332,86 @@ nv.addGraph(function() {
 
 });
 
+function showSection(chart,section)
+{
+document.getElementById(chart+"_loader").style.display = "none";
+document.getElementById(chart+"_error").style.display = "none";
+document.getElementById(chart+"_graph").style.display = "none";
+document.getElementById(chart+"_"+section).style.display = "block";
+}
+
+function showDiv(id) {
+  document.getElementById(id).style.display = "block";
+}
+
+function hideDiv(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+function showTitle(code) {
+  document.getElementById('charttitle').innerHTML ="<h1>"+code+" crowd predictions</h1>";
+}
+
+function showpark(code){
+showDiv('titleDiv');
+
+showSection("hourly","loader");
+showSection("daily","loader");
+
+$.getJSON("/query?option="+code,function(result){
+showSection("hourly","graph");
+
+  var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
+                     {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
+  var x = [];
+    
+  for(var i=0; i<result["estimates"].length; i+=4){
+    x.push(result["estimates"][i]["x"]);
+  };
+
+  chart.xAxis.tickValues(x);	
+  chart_data.datum(packed_data).transition().duration(500).call(chart);
+}).fail(function()
+{
+showSection("hourly","error");
+});
+
+$.getJSON("/dailyquery?option="+code,function(dailyresult){
+showSection("daily","graph");
+
+  var dailyestimates=[];
+  var dailyaverages=[];
+  var x2=[];
+
+  for(var i=0; i<dailyresult.length; i++) {
+      dailyestimates.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y"]});
+      dailyaverages.push({"x":dailyresult[i]["x"], "y":dailyresult[i]["y2"]});
+      x2.push(dailyresult[i]["x"]);
+  }
+
+  //console.log(x2);
+
+  packed_data2 = [{"key":"Model estimate", "values":dailyestimates, "color": '#ff7f0e'},
+                  {"key":"Average daily level", "values":dailyaverages, "color": '#205D7A'}];
+
+  chart2.xAxis.tickValues(x2);	
+  chart_data2.datum(packed_data2).transition().duration(500).call(chart2);
+}).fail(function()
+{
+showSection("daily","error")
+});
+
+  showTitle(code);
+}
+
 </script>
-</div>
-</div>
-
-<div class="container-fluid bg-grey">
-  <a name="about"></a>
-  <div class="text-left">
-    <p><b>Daily predictions.</b> The orange line shows the expected crowd level for each of the next 10 days. The blue line shows the average crowd level for that day of the week (e.g., Monday, Tuesday,
-  Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size. If the orange line is higher than the blue line, it indicates higher than average crowds for that day of the week. Accuracy (coefficient of determination) of the daily model is 0.79. </p>
-    </div>
-    </div>
-</div>
-</div>
-
-<!-- Container (About Section) -->
-<div class="container-fluid bg-grey">
-<a name="about"></a> 
-<div class="text-center"> <h2><i class="fa fa-info-circle" style="font-size:30px;padding: 0 10px 0 0;"></i>About</h2></div>
-<div class="col-md-8 col-md-offset-2 text-justify">
-  
-<p>This website generates crowd level predictions for outdoor parks using twitter and weather data, and is intended to be a useful application for people trying to plan their recreation time, for companies who hope to make more effective use of advertising time and money, and for planners who want to efficiently deploy services such as transportation. In theory, the models developed here could be extended to any park, so long as enough people find it an interesting place to post about on social media! Both the relationship between <a href="http://datasciencelab.co.uk/research_paper/quantifying-crowd-size-with-mobile-phone-and-twitter-data/">social media posts and crowds</a> and between <a href="https://www.researchgate.net/publication/257668742_Modelling_visitor_attendance_levels_subject_to_day_of_the_week_and_weather_A_comparison_between_linear_regression_models_and_regression_trees">weather and outdoor park use</a> have been documented in scientific research and this project tries to combine these ideas to gain predictive insights.</p>
-
-  <p>Future plans for the project include deploying a map of crowd "hotspots" once enough parks in a regional area are added, and incorporating nlp analysis of tweet content to model when users report crowds and their sentiments about their experience at the park.</p>
-
-  
-  <p>When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate predictions for the next few days. These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels.
-
-</div>
-</div>
-
 
 <!-- Container (Tech Section) -->
 <div class="container-fluid">
 <div class="text-center"> <h2><i class="fa fa-gears" style="font-size:30px;padding: 0 10px 0 0;"></i>Technical details</h2></div>
 <div class="col-md-8 col-md-offset-2 text-justify">
+
+<p>When the user chooses a park, the app grabs the current local weather forecast for the park from the <a href="https://www.wunderground.com/">wunderground API</a> and uses these data to generate predictions for the next few days. These predictions are based on cross-validated machine-learning models built using <a href="http://scikit-learn.org/stable/">scikit-learn</a> in python that use tweets as a proxy for crowd levels.
 
 <p>The current models are a combination of linear regression with k-nearest neighbors and Random Forest models of the regression residuals. The models are trained on a historical weather and twitter dataset collected using <a href="https://docs.python.org/2/library/urllib.html">urllib</a> and a <a href="http://www.seleniumhq.org/">Selenium</a> webscraper, respectively, parsed using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>, and passed to a <a href="https://www.mysql.com/">MySQL</a> database using <a href="https://sourceforge.net/projects/mysql-python/">MySQLdb</a>. The current training dataset consists of one full year of tweets from Disneyland and California Adventure (totaling over 150,000 tweets) and hourly weather data from <a href="https://www.wunderground.com/">wunderground.com</a>. To build the models, tweets and weather reports were binned by hour (or by day) to generate crowd level estimates per time period. Several calendar indicator variables (e.g., time, weekday, month of the year) are also included in the models to account for daily, weekly, and seasonal periodicity in park attendance as well as for holiday periods. Only the most recent models are stored in the website repository and are loaded using <a href="https://pypi.python.org/pypi/dill">dill</a> at the time predictions are requested by the user.
 
@@ -401,10 +426,10 @@ nv.addGraph(function() {
 <h2><i class="fa fa-paper-plane" style="font-size:30px;padding: 0 5px 0 0;"></i>Contact</h2>
   <div class="col-md-8 col-md-offset-2 text-center">
     <div class="row">
-    <div class="col-md-2 col-md-offset-1">
+    <div class="col-md-2 col-md-offset-1 col-xs-5 col-xs-offset-0">
     <img class="img-circle" src="static/headshot.jpg" width=125px>
     </div>
-    <div class="col-md-7 bubble text-justify">
+    <div class="col-md-7 col-xs-7 col-xs-offset-0 bubble text-justify">
     <p>Elspeth Ready is an anthropologist and data scientist. She loves the outdoors and is not a fan of crowds but finds them (and any other large scale patterning in human culture and behavior) interesting to think about. </p>
     </div>
     </div>
@@ -416,8 +441,6 @@ nv.addGraph(function() {
   
 <footer class="container-fluid text-center">
 <a href="#" title="To Top"><span class="glyphicon glyphicon-chevron-up"></span></a>
-<h3></h3>
-
 
 </footer>
 
