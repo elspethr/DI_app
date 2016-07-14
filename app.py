@@ -10,6 +10,7 @@ import logging
 import sys
 import pandas as pd
 import time
+import math
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -36,7 +37,7 @@ def get_hourly_forecast(key, code):
         predsdict = {'California Adventure': 0.0,
                     'Clear': 0.0,
                     'Disneyland': 0.0,
-                    'Fog':0.0,
+                    'Fog': 0.0,
                     'Haze': 0.0,
                     'Heavy Rain': 0.0,
                     'Light Rain': 0.0,
@@ -54,7 +55,26 @@ def get_hourly_forecast(key, code):
                     'business_day': 0.0,
                     'holiday': 0.0,
                     'wind': 0.0,
-                    'wind2': 0.0}
+                    'wind2': 0.0,
+                    'Monday': 0.0,
+                    'Tuesday': 0.0,
+                    'Wednesday': 0.0,
+                    'Thursday': 0.0,
+                    'Friday': 0.0,
+                    'Saturday': 0.0,
+                    'Sunday': 0.0,
+                    'January': 0.0,
+                    'February': 0.0,
+                    'March': 0.0,
+                    'April': 0.0,
+                    'May': 0.0,
+                    'June': 0.0,
+                    'July': 0.0,
+                    'August': 0.0,
+                    'September': 0.0,
+                    'October': 0.0,
+                    'November': 0.0,
+                    'December': 0.0}
         predsdict[code] = 1.0
         predsdict['temp'] = float(line[0].get('english'))
         predsdict['temp2'] = predsdict['temp']**2
@@ -66,6 +86,8 @@ def get_hourly_forecast(key, code):
 
         dates.append(int(line[2]['epoch']))
         date=datetime.utcfromtimestamp(int(line[2]['epoch']))
+        predsdict[date.strftime('%B')] = 1.0 #set month of year
+        predsdict[date.strftime('%A')] = 1.0 #set day of week
         if(date.weekday() >= 5):
             predsdict['business_day'] = 1
         if(date in us_holidays):
@@ -113,13 +135,25 @@ def get_daily_forecast(key, code):
                     'wind2': 0.0, 
                     'humidity':0.0, 
                     'precip': 0.0,
-                     0:0,
-                     1:0,
-                     2:0,
-                     3:0,
-                     4:0,
-                     5:0,
-                     6:0}
+                    'Monday': 0.0,
+                    'Tuesday': 0.0,
+                    'Wednesday': 0.0,
+                    'Thursday': 0.0,
+                    'Friday': 0.0,
+                    'Saturday': 0.0,
+                    'Sunday': 0.0,
+                    'January': 0.0,
+                    'February': 0.0,
+                    'March': 0.0,
+                    'April': 0.0,
+                    'May': 0.0,
+                    'June': 0.0,
+                    'July': 0.0,
+                    'August': 0.0,
+                    'September': 0.0,
+                    'October': 0.0,
+                    'November': 0.0,
+                    'December': 0.0}
         predsdict[code] = 1.0
         predsdict['humidity'] = float(line[0])
         predsdict['wind'] = float(line[1].get('mph'))
@@ -132,18 +166,18 @@ def get_daily_forecast(key, code):
         predsdict['precip'] = line[6].get('in')
         if not predsdict['precip']: predsdict['precip'] = 0.0
         predsdict[line[2]] = 1.0
+        predsdict[line[2]] 
         
         dailydates.append(int(line[3]['epoch'])-28800) #- timedelta(hours=8))
         date=datetime.utcfromtimestamp(int(line[3]['epoch'])) - timedelta(hours=8)
-        predsdict['dow'] = date.weekday()
-        predsdict['dow2'] = predsdict['dow']**2
-        predsdict[date.weekday()] = 1.0
+        predsdict[date.strftime('%B')] = 1.0 #set month of year
+        predsdict[date.strftime('%A')] = 1.0
         if(date.weekday() >= 5):
             predsdict['business_day'] = True
         if(date in us_holidays):
             predsdict['holiday'] = True
         dailypreds.append(predsdict)
-    #print dailypreds   
+    print dailypreds[0]   
     #return variables needed later
     return {'predictors':dailypreds, 'dates':dailydates}
 
@@ -235,7 +269,7 @@ def get_query2():
         dates = []
         for i in dailydat["dates"]:
             date = datetime.fromtimestamp(i)
-            dow = date.weekday()
+            dow = date.strftime('%A')
             dailyaverage.append(daverages[dow])
             dates.append(i)
         dailysendtojs = [{"x":dates[i],"y":dailyestimates[i], "y2":dailyaverage[i]} for i in range(len(dailyestimates))]

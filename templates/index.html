@@ -228,35 +228,35 @@
 <svg style="height:400px;text-align:center;display:block;margin:auto"> </svg>
 </div>
 </div>
+    
+</div>
 
-<div class="container-fluid bg-mauve">
+<div id='HourlyCaptionDiv' class="container-fluid bg-mauve" style="display:none;">
 <div class="col-md-8 col-md-offset-2 text-justify">
-<p><b>Hourly predictions.</b> The orange line shows the expected crowd level at each hour of the day from 8am to 10pm (in orange) for the next 36 hours, based on the current weather forecast and calendar data (e.g., weekend or holiday).  The blue line shows the average crowd level at that time of day for all days in the historic dataset.  If the orange line is higher than the blue line, it indicates higher than average crowds for that time of day.  Crowd metric for the hourly model is unique users tweeting per hour, standardized by park size.  Accuracy (coefficient of determination) of the hourly prediction model on test data is 0.62.</p>
+<p><b>Hourly predictions.</b> The orange line shows the expected crowd level at each hour of the day from 8am to 10pm (in orange) for the next 36 hours, based on the current weather forecast and calendar data (e.g., weekend or holiday).  The blue line shows the average crowd level at that time of day for all days in the historic dataset.  If the orange line is higher than the blue line, it indicates higher than average crowds for that time of day.  Crowd metric for the hourly model is unique users tweeting per hour, standardized by park size.  Cross-validation test sample mean accuracy (coefficient of determination) of the hourly prediction model on test data is 0.66.</p>
 </div>
-</div>
-
 </div>
 
 <div id="daily_loader" class="text-center" style="display:none;"><img src="static/balls.gif" /><h4>Getting data...</h4></div>
 <div id="daily_error" class="text-center" style="display:none;">Error: unable to load data. Please try again.</div>
 <div id="daily_graph" style="display:none;">
 
-<div class="container-fluid text-center">
+<div class="container-fluid text-center" >
 <h2>Crowd levels for next 10 days</h2>
 <div class="col-md-10 col-md-offset-1" id="chart2" style="text-align:center">
 <svg style="height:400px;text-align:center;display:block;margin:auto"> </svg>
 </div>
 </div>
+    
+</div>
 
-<div class="container-fluid bg-mauve">
+<div id='DailyCaptionDiv' class="container-fluid bg-mauve" style="display:none;">
 <div class="col-md-8 col-md-offset-2 text-justify">
     <p><b>Daily predictions.</b> The orange line shows the expected crowd level for each of the next 10 days. The blue line shows the average crowd level for that day of the week (e.g., Monday, Tuesday,
-  Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size. If the orange line is higher than the blue line, it indicates higher than average crowds for that day of the week. Accuracy (coefficient of determination) of the daily model is 0.79. </p>
+  Wednesday) for all days in the historical dataset. The crowd metric for daily predictions is unique users tweeting per day, standardized by park size. If the orange line is higher than the blue line, it indicates higher than average crowds for that day of the week. Cross-validated mean accuracy (coefficient of determination) of the daily model is 0.80. </p>
 </div>
 </div>
 
-</div>
-</div>
 
 <!-- Container (About Section) -->
 <div class="container-fluid bg-grey">
@@ -268,7 +268,6 @@
 
   <p>Future plans for the project include deploying a map of crowd "hotspots" once enough parks in a regional area are added, and incorporating nlp analysis of tweet content to model when users report crowds and their sentiments about their experience at the park.</p>
  
-</div>
 </div>
 </div>
 
@@ -292,7 +291,7 @@ nv.addGraph(function() {
     
   chart.yAxis 
       .axisLabel('Crowd prediction (tweets per acre per hour)')
-      .tickFormat(d3.format('.02f'));
+      .tickFormat(d3.format('.3f'));
     
   chart_data=d3.select('#chart svg').datum([]);
   chart_data.transition().duration(500).call(chart);
@@ -321,7 +320,7 @@ nv.addGraph(function() {
     
   chart2.yAxis 
       .axisLabel('Crowd prediction (tweets per acre per day)')
-      .tickFormat(d3.format('.02f'));
+      .tickFormat(d3.format('.2f'));
 
   chart_data2=d3.select('#chart2 svg').datum([]);
   chart_data2.transition().duration(500).call(chart2);
@@ -350,6 +349,8 @@ document.getElementById("hourly_graph").style.display = "none";
 document.getElementById("daily_loader").style.display = "none";
 document.getElementById("daily_error").style.display = "none";
 document.getElementById("daily_graph").style.display = "none";
+document.getElementById("DailyCaptionDiv").style.display = "none";
+document.getElementById("HourlyCaptionDiv").style.display = "none";
 }
 
 function showDiv(id) {
@@ -366,13 +367,21 @@ function showTitle(code) {
 
 function showpark(code){
 showDiv('titleDiv');
+showDiv('HourlyCaptionDiv');
+showDiv('DailyCaptionDiv');    
 
 showSection("hourly","loader");
 showSection("daily","loader");
 
 $.getJSON("/query?option="+code,function(result){
 showSection("hourly","graph");
-
+  
+  /*for(var i=0; i<result["estimates"].length; i+=1){
+    if (result["estimates"][i]["y"] == null){
+        result["estimates"][i]["y"] = 'N/A';
+    }
+  };*/
+    
   var packed_data = [{"key":"Model estimate", "values":result["estimates"], "color": '#ff7f0e'},
                      {"key":"Average hourly level", "values":result["averages"], "color":'#205D7A'}];
   var x = [];
@@ -381,7 +390,8 @@ showSection("hourly","graph");
     x.push(result["estimates"][i]["x"]);
   };
 
-  chart.xAxis.tickValues(x);	
+  chart.xAxis.tickValues(x);
+
   chart_data.datum(packed_data).transition().duration(500).call(chart);
 }).fail(function()
 {
