@@ -10,7 +10,6 @@ import logging
 import sys
 import pandas as pd
 import time
-import math
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
